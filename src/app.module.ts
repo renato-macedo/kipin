@@ -10,14 +10,11 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     PageModule,
-    MongooseModule.forRoot(
-      'mongodb+srv://renato:123@cluster0-ubjaz.mongodb.net/pocket?retryWrites=true&w=majority',
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false,
-      },
-    ),
+    MongooseModule.forRoot(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    }),
     UserModule,
     AuthModule,
   ],
