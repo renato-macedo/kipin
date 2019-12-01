@@ -1,8 +1,9 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from '../user/user.dto';
+import { CreateUserDto, LoginUserDto } from '../user/user.dto';
 import * as bcrypt from 'bcrypt';
+import { User } from '../user/user.interface';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(email: string, pass: string): Promise<User> {
     const user = await this.userService.findOne(email);
 
     if (user) {
@@ -20,15 +21,14 @@ export class AuthService {
       if (isSamePassword) {
         return this.userService.sanitizeUser(user);
       }
-
-      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+      return null;
+      // throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
-
-    throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    return null;
   }
 
-  async login(user: any) {
-    const payload = { email: user.email, sub: user.userId };
+  async login(user: User) {
+    const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };

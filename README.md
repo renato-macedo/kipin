@@ -4,9 +4,6 @@ This is the backend of a application to store pages and notes (like GoogleKeep, 
 
 ## TO DO
 
-- Add @hapi/joi for validation
-- Check jwt
-- I can't remember the other things
 
 ## Installation
 

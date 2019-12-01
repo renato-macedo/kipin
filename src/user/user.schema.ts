@@ -12,15 +12,6 @@ export const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
-    pages: [
-      {
-        page: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Page',
-        },
-      },
-    ],
   },
   {
     timestamps: true,

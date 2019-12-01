@@ -21,6 +21,7 @@ export class UserService {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
 
+    console.log(data);
     const hash = await bcrypt.hash(password, 10);
     const newUser = new this.userModel({
       name,
