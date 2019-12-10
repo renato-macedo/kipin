@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "Kipin",
+  "author": "Renato Macêdo",
+  "version": "0.1",
+  "description": "A extension to save your pages",
+  "browser_action": {
+    "default_icon": "icon.png"
+  },
+  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

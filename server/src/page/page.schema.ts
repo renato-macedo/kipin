@@ -6,6 +6,8 @@ export const PageSchema = new Schema(
       type: String,
       required: true,
     },
+    title: String,
+    
     caption: String,
 
     user: {

@@ -13,6 +13,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { PageService } from './page.service';
 import { UpdatePageDto, PageParams, CreatePageDto } from './page.dto';
+
 @Controller('pages')
 export class PageController {
   constructor(private readonly pageService: PageService) {}
@@ -39,6 +40,7 @@ export class PageController {
   ) {
     const updatedPage = await this.pageService.updatePage({
       id: params.pageid,
+      title: data.title,
       url: data.url,
       caption: data.caption,
       ...req.user,

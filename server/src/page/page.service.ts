@@ -10,14 +10,15 @@ export class PageService {
 
   async index(userid) {
     console.log({ userid });
-
-    return this.pageModel.find({ user: userid }).exec();
+    const pages = await this.pageModel.find({ user: userid }).exec();
+    
+    return pages.map(page => ({ id: page.id, caption: page.caption, url: page.url, title: page.title }));
   }
 
   async createPage(data: any) {
-    const { userId: user, caption, url } = data;
+    const { userId: user, caption, url, title } = data;
     console.log(user);
-    const newPage = await new this.pageModel({ user, caption, url }).save();
+    const newPage = await new this.pageModel({ user, caption, url, title }).save();
 
     return newPage;
   }
