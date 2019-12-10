@@ -1,10 +1,11 @@
 ## Description
 
-This is the backend of a application to store pages and notes (like GoogleKeep, Pocket)
+This is a application to store pages and notes (like GoogleKeep, Pocket)
 
 ## Installation
 
 ```bash
+$ cd server
 $ npm install
 ```
 
@@ -19,19 +20,6 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
 ## License
