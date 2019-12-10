@@ -1,35 +1,30 @@
 import { IsUrl, IsString, IsNotEmpty, IsMongoId } from 'class-validator';
 
-export class CreatePageDto {
+export class CreateItemDto {
   @IsNotEmpty()
   @IsUrl()
-  url: string;
+  body: string;
 
   @IsNotEmpty()
   @IsString()
   title: string;
 
-  @IsNotEmpty()
-  @IsString()
-  caption?: string;
 }
 
-export class UpdatePageDto {
+export class UpdateItemDto {
   @IsNotEmpty()
   @IsUrl()
-  url: string;
+  body: string;
   
   @IsNotEmpty()
   @IsString()
   title: string;
   
-  @IsNotEmpty()
-  @IsString()
-  caption: string;
+
 }
 
-export class PageParams {
+export class ItemParams {
   @IsNotEmpty()
   @IsMongoId()
-  pageid: string;
+  itemid: string;
 }

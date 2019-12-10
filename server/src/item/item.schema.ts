@@ -1,14 +1,12 @@
 import { Schema } from 'mongoose';
 
-export const PageSchema = new Schema(
+export const ItemSchema = new Schema(
   {
-    url: {
+    body: {
       type: String,
       required: true,
     },
     title: String,
-    
-    caption: String,
 
     user: {
       type: Schema.Types.ObjectId,
