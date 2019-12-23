@@ -10,7 +10,6 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Request() req) {
-    console.log('asasassa', req.user);
     return this.authService.login(req.user);
   }
 
@@ -19,4 +18,5 @@ export class AuthController {
     console.log({ data });
     return this.authService.register(data);
   }
+
 }

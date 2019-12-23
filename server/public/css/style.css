@@ -107,3 +107,11 @@ button {
   height: 45px;
   width: 90px;
 }
+
+#error {
+  color: red;
+  text-align: center;
+  display: none;
+  position: fixed;
+  margin-top: 270px;
+}
