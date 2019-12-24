@@ -9,40 +9,42 @@
   </head>
   <body>
     <div class="container">
-      <ul class="option">
-        <li class="signup-option activate">Sign Up</li>
-        <li class="login-option">Log In</li>
-      </ul>
+      <div class="form-container">
+        <ul class="option">
+          <li class="signup-option activate">Sign Up</li>
+          <li class="login-option">Log In</li>
+        </ul>
 
-      <div id="title">Sign Up for Free!</div>
+        <h1 id="title">Sign Up for Free!</h1>
 
-      <div class="form signup ">
-        <input type="text" name="name" id="name" placeholder="Name"  autocomplete="off"/>
-        <input type="email" name="email" id="email" placeholder="Email"  autocomplete="off"/>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="Password"
-        />
-        <button>Sign Up</button>
-      </div>
-      <div class="form login deactivate ">
-        <input value={{message}} type="email" name="email" id="login_email" placeholder="Email" autocomplete="off" />
-        <input
-          type="password"
-          name="password"
-          id="login_password"
-          placeholder="Password"
-          autocomplete="off"
-          value="renato03"
-        />
+        <form type="submit" method="POST" class="form signup ">
+          <input type="text" name="name" id="name" placeholder="Name"  autocomplete="off"/>
+          <input type="email" name="email" id="email" placeholder="Email"  autocomplete="off"/>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Password"
+          />
+          <button >Sign Up</button>
+        </form>
+        <form id="login" method="POST" class="form login deactivate ">
+          <input value={{message}} type="email" name="email" id="login_email" placeholder="Email" autocomplete="off" />
+          <input
+            type="password"
+            name="password"
+            id="login_password"
+            placeholder="Password"
+            autocomplete="off"
+            value="renato03"
+          />
 
-        <a href="">Forgot Password?</a>
-        <button id="login" >Log In</button>
-      </div>
-      <div id="error">
-        Invalid Crendentials
+          <a href="">Forgot Password?</a>
+          <button type="submit" >Log In</button>
+        </form>
+        <div id="error">
+          Invalid Crendentials
+        </div>
       </div>
     </div>
     <script src="/js/popup.js"></script>

@@ -4,7 +4,8 @@ document.getElementById('login').addEventListener('mouseover', () => {
   chrome.runtime.sendMessage({ message: 'top top' });
 });
 
-document.getElementById('login').addEventListener('click', async () => {
+document.getElementById('login').addEventListener('submit', async e => {
+  e.preventDefault();
   const email = document.getElementById('login_email').value;
   const password = document.getElementById('login_password').value;
 
