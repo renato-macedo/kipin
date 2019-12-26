@@ -20,7 +20,11 @@ export class ItemService {
     console.log(user);
     const newItem = await new this.itemModel({ user, body, title }).save();
 
-    return newItem;
+    return {
+      id: newItem.id,
+      body: newItem.body,
+      title: newItem.title
+    };
   }
 
   async updateItem(data: any) {
