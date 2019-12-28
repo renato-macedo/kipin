@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Item } from './item.interface';
 
-
 @Injectable()
 export class ItemService {
   constructor(@InjectModel('Item') private readonly itemModel: Model<Item>) {}
@@ -11,19 +10,26 @@ export class ItemService {
   async index(userid) {
     console.log({ userid });
     const items = await this.itemModel.find({ user: userid }).exec();
-    
-    return items.map(item => ({ id: item.id, body: item.body, title: item.title }));
+
+    return items.map(item => ({
+      id: item.id,
+      body: item.body,
+      title: item.title,
+    }));
   }
 
   async createItem(data: any) {
     const { userId: user, body, title } = data;
     console.log(user);
-    const newItem = await new this.itemModel({ user, body, title }).save();
+    let item = await this.itemModel.findOne({ body });
+    if (!item) {
+      item = await new this.itemModel({ user, body, title }).save();
+    }
 
     return {
-      id: newItem.id,
-      body: newItem.body,
-      title: newItem.title
+      id: item.id,
+      body: item.body,
+      title: item.title,
     };
   }
 
