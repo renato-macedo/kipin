@@ -1,8 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const SizePlugin = require('size-plugin');
 
 module.exports = {
-  entry: './src/index',
+  entry: ['babel-polyfill', './src/index'],
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'main.js'
@@ -18,20 +19,22 @@ module.exports = {
         test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader']
       }
+      // {
+      //   test: /\.css$/,
+      //   use: ['style-loader', 'css-loader']
+      // }
     ]
   },
   plugins: [
+    new SizePlugin(),
     new HtmlWebpackPlugin({
       template: './index.html'
     })
   ],
   devServer: {
     contentBase: './',
+    historyApiFallback: true,
     port: 5000
   }
 };
