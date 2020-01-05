@@ -411,6 +411,11 @@
     ts-morph "^4.0.0"
     typescript "3.4.5"
 
+"@nestjs/serve-static@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/serve-static/-/serve-static-1.0.2.tgz#8baa1a20fa39457186be4ec3e29b446d83d3fcb0"
+  integrity sha512-PRTrmytKXGSDYJn8i0I/XiSV01tygh4L0SR5bq1/zxIT5HHK/edmlULKfHeeA2pHQV7YLxMH33al/TPlcn4tXQ==
+
 "@nestjs/testing@^6.7.1":
   version "6.10.1"
   resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-6.10.1.tgz#b55675ab8e76b230320248b5f32e50961d6154c3"
@@ -530,6 +535,13 @@
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@types/cookiejar/-/cookiejar-2.1.1.tgz#90b68446364baf9efd8e8349bb36bd3852b75b80"
   integrity sha512-aRnpPa7ysx3aNW60hTiCtLHlQaIFsXFCgQlpakNgDNVFzbtusSY8PwjAQgRWfSk0ekNoBjO51eQRB6upA9uuyw==
+
+"@types/dotenv@^8.2.0":
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/@types/dotenv/-/dotenv-8.2.0.tgz#5cd64710c3c98e82d9d15844375a33bf1b45d053"
+  integrity sha512-ylSC9GhfRH7m1EUXBXofhgx4lUWmFeQDINW5oLuS+gxWdfUeW4zJdeVTYVkexEW+e2VUvlZR2kGnGGipAWR7kw==
+  dependencies:
+    dotenv "*"
 
 "@types/events@*":
   version "3.0.0"
@@ -2163,7 +2175,7 @@ domexception@^1.0.1:
   dependencies:
     webidl-conversions "^4.0.2"
 
-dotenv@^8.2.0:
+dotenv@*, dotenv@^8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
