@@ -13,3 +13,9 @@ export interface ItemProps {
 export interface ItemListProps {
   items: ItemInterface[];
 }
+
+export interface User {
+  name: string;
+  email: string;
+  token?: string;
+}
