@@ -45,7 +45,14 @@ export class UserService {
 
   // }
 
-  async findOne(email: string): Promise<User | undefined> {
-    return this.userModel.findOne({ email });
+  findOne(email: string): Promise<User | undefined> {
+    return this.userModel.findOne({ email }).exec();
+  }
+
+  loadUser(userId: string) {
+    return this.userModel
+      .findById(userId)
+      .select('-password')
+      .exec();
   }
 }
