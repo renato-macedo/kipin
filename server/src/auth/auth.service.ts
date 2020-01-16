@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async validateUser(email: string, pass: string): Promise<User> {
     const user = await this.userService.findOne(email);
@@ -27,13 +27,18 @@ export class AuthService {
     return null;
   }
 
-  login(user: User) {
+  generateAccessToken(user: User) {
     const payload = { email: user.email, sub: user.id };
-    return {
-      token: this.jwtService.sign(payload),
-    };
+    return this.jwtService.signAsync(payload, {
+      expiresIn: '1min'
+    });
   }
 
+  generateRefreshToken(userId) {
+    return this.jwtService.signAsync({ sub: userId }, {
+      expiresIn: '3min'
+    })
+  }
   register(user: CreateUserDto) {
     return this.userService.create(user);
   }

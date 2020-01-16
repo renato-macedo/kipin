@@ -1,14 +1,14 @@
 import { createContext } from 'react';
-import { AuthContext } from '../types';
+import { iAuthContext } from '../types';
 
-const AuthContext = createContext<AuthContext>({
+const AuthContext = createContext<iAuthContext>({
   isAuthenticated: false,
   loading: false,
   loadUser: () => {},
   login: () => {},
   register: () => {},
   logout: () => {},
-  token: '',
+  // token: '',
   user: null,
   error: {},
   clearErrors: () => {}

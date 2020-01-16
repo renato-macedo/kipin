@@ -22,32 +22,37 @@ export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 
-export interface AuthContext {
-  token: string | null;
+export interface iFormData {
+  name?: string;
+  email: string;
+  password: string;
+}
+
+export interface iAuthContext {
+  //token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   user: User | null;
   error: {};
-  login?: (formData: {}) => void;
-  register?: (formData: {}) => void;
+  login: (formData: iFormData) => void;
+  register?: (formData: iFormData) => void;
   logout?: () => void;
-  clearErrors?: () => void;
-  loadUser?: () => void;
+  clearErrors: () => void;
+  loadUser: () => void;
 }
 
 export interface iAuthState {
-  token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   user: User | null;
   error: {};
 }
 
-export interface AuthPayload {
-  token: string;
-}
+// export interface AuthPayload {
+//   token: string;
+// }
 
 export interface Action {
   type: string;
-  payload: AuthPayload | User;
+  payload: User | null;
 }

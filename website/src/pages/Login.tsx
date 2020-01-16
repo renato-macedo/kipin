@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Button } from 'baseui/button';
 import { Card, StyledBody, StyledAction } from 'baseui/card';
 import { StyledLink } from 'baseui/link';
 import { FormControl } from 'baseui/form-control';
 import { Input } from 'baseui/input';
 import { useStyletron, styled } from 'baseui';
+import AuthContext from '../context/auth/AuthContext';
 
 const Container = styled('form', {
   display: 'flex',
@@ -15,15 +16,30 @@ const Container = styled('form', {
   margin: '5% auto'
 });
 
-export default function Login() {
+export default function Login(props: any) {
+  const { login, error, clearErrors, loadUser, isAuthenticated } = useContext(
+    AuthContext
+  );
   const [css, theme] = useStyletron();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    console.log(event, email, password);
+    login({ email, password });
+    // console.log(event, email, password);
   }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      props.history.push('/');
+    }
+    // if (error === 'Invalid Credentials') {
+    //   alert(error);
+    //   //setAlert(error, 'danger');
+    //   //clearErrors();
+    // }
+  }, [error, isAuthenticated, props.history]);
 
   return (
     <Container onSubmit={handleSubmit}>

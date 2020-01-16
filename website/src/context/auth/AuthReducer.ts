@@ -3,7 +3,8 @@ import {
   LOGIN_FAIL,
   AUTH_ERROR,
   Action,
-  iAuthState
+  iAuthState,
+  USER_LOADED
 } from '../types';
 
 import { Reducer } from 'react';
@@ -15,32 +16,36 @@ const AuthReducer: any = (
 ) => {
   switch (action.type) {
     case LOGIN_SUCCESS:
-      if (action.payload.token) {
-        localStorage.setItem('token', action.payload.token);
-        return {
-          ...state,
-          user: action.payload,
-          isAuthtenticated: true,
-          loading: false
-        };
-      } else {
-        throw new Error(`Token cannot be null, payload: ${action.payload}`);
-      }
+      //localStorage.setItem('token', action.payload.token);
+      console.log('LOGIN SUCCESS');
+      return {
+        ...state,
+        isAuthenticated: true,
+        loading: false,
+        token: null
+      };
+
+    case USER_LOADED:
+      console.log('USER LOADED')
+      return {
+        ...state,
+        user: action.payload,
+        isAuthenticated: true,
+        token: null
+      };
     case LOGIN_FAIL:
     case AUTH_ERROR:
-      localStorage.removeItem('token');
+      console.error('AUTH ERROR')
       return {
         ...state,
         token: null,
-        isAuthtenticated: false,
+        isAuthenticated: false,
         loading: false,
         user: null,
         error: action.payload
       };
     default:
-      return {
-        ...state
-      };
+      return state;
   }
 };
 
