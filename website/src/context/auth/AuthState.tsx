@@ -2,7 +2,7 @@
 import React, { useReducer, Reducer } from 'react';
 import AuthContext from './AuthContext';
 import AuthReducer from './AuthReducer';
-
+import setAuthToken from '../../utils/setAuthToken';
 import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
@@ -18,12 +18,11 @@ import axios from 'axios';
 
 // let TokenInMemory: string;
 // let expiresIn: number;
-const accessToken = { token: '' }
-
+let accessToken: string;
 
 function AuthState(props: any): any {
   const initialState: iAuthState = {
-    // token: localStorage.getItem('token'),
+    token: accessToken,
     isAuthenticated: false,
     loading: true,
     user: null,
@@ -51,12 +50,11 @@ function AuthState(props: any): any {
       );
       console.log(response.headers);
 
-      accessToken.token = response.data.token;
-      accessToken.expiresIn = response.data.expiresIn
+      accessToken = response.data.token;
 
       dispatch({
         type: LOGIN_SUCCESS,
-        payload: null
+        payload: response.data.token
       });
 
       loadUser();
@@ -70,12 +68,14 @@ function AuthState(props: any): any {
 
   async function refreshToken(): Promise<[boolean, string]> {
     try {
-      const response = await axios.get('http://localhost:3000/auth/refresh_token')
-      console.log(response.data)
-      return [true, response.data.token]
+      const response = await axios.get(
+        'http://localhost:3000/auth/refresh_token'
+      );
+      console.log(response.data);
+      return [true, response.data.token];
     } catch (error) {
-      console.log(error.response.data)
-      return [false, error.response.data.error]
+      console.log(error.response.data);
+      return [false, error.response.data.error];
     }
   }
 
@@ -83,13 +83,11 @@ function AuthState(props: any): any {
   async function loadUser() {
     console.log('TOKEN', accessToken);
     // if the token is still in memory use on the request
-    if (accessToken.token) {
-
-      setAuthToken(accessToken.token);
+    if (accessToken) {
+      setAuthToken(accessToken);
     }
 
     try {
-
       const response = await axios.get('http://localhost:3000/auth/user');
 
       // if everything is okay, load the user
@@ -98,21 +96,20 @@ function AuthState(props: any): any {
         type: USER_LOADED,
         payload: response.data
       });
-      console.log('usuario carregado')
+      console.log('usuario carregado');
     } catch (error) {
-
       // if something went wrong, it means the token is not in memory or is expired, either way try to refresh
-      console.log('no token')
+      console.log('no token');
 
       const [success, data] = await refreshToken();
 
       if (success) {
-        console.log('success', data)
-        accessToken.token = data
-        console.log('calling loadUser again')
-        loadUser()
+        console.log('success', data);
+        accessToken = data;
+        console.log('calling loadUser again');
+        loadUser();
       } else {
-        console.log('no success')
+        console.log('no success');
         dispatch({
           type: AUTH_ERROR,
           payload: error.response.data.message
@@ -121,11 +118,7 @@ function AuthState(props: any): any {
     }
   }
 
-
-
-
-
-  function clearErrors() { }
+  function clearErrors() {}
   return (
     <AuthContext.Provider
       value={{
@@ -143,24 +136,5 @@ function AuthState(props: any): any {
     </AuthContext.Provider>
   );
 }
-
-
-
-
-
-
-
-
-function setAuthToken(token: string) {
-  console.log({ token });
-  if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  } else {
-    delete axios.defaults.headers.common['Authorization'];
-  }
-}
-
-
-
 
 export default AuthState;

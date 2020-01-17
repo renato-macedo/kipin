@@ -1,10 +1,11 @@
-import * as React from 'react';
+import React, { Props, PropsWithChildren } from 'react';
 import { Card, StyledBody, StyledAction, StyledThumbnail } from 'baseui/card';
 import { Button } from 'baseui/button';
-import { ItemProps } from 'types/Item';
 
-export default function Item(props: ItemProps) {
-  const { title, body } = props;
+import { ItemInterface } from '../context/types';
+
+export default function Item(props: PropsWithChildren<ItemInterface>) {
+  const { title, body, id } = props;
   return (
     <Card overrides={{ Root: { style: { width: '328px' } } }} title={title}>
       <StyledThumbnail

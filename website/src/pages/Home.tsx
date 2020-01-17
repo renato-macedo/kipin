@@ -7,27 +7,22 @@ import AuthContext from '../context/auth/AuthContext';
 //import { ItemInterface } from 'types';
 
 export default function Home(): JSX.Element {
-  // const [items, setItems] = useState([
-  //   { body: 'https://twitter.com/home', title: 'ok' },
-  //   { body: 'https://twitter.com/home', title: 'ok' }
-  // ]);
-
-  useEffect(() => {
-    //getItems();
-    loadUser()
-  }, []);
   // if (isLoading) {
   //   return <Spinner />;
   // }
-  const { loadUser } = useContext(AuthContext)
-  function handleClick() {
-    loadUser()
-  }
+  const { loadUser, isAuthenticated } = useContext(AuthContext);
+
+  useEffect(() => {
+    //getItems();
+    if (isAuthenticated) {
+      loadUser();
+    }
+  }, [isAuthenticated]);
   return (
     <Fragment>
       <h1>Home</h1>
       {/* <button onClick={handleClick}>Verificar se esta autenticado</button> */}
-      <ItemList />
+      {isAuthenticated ? <ItemList /> : <h1>Usuário não autenticado</h1>}
     </Fragment>
   );
 }

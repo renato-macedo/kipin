@@ -39,7 +39,7 @@ export default function Login(props: any) {
     //   //setAlert(error, 'danger');
     //   //clearErrors();
     // }
-  }, [error, isAuthenticated, props.history]);
+  }, [error, isAuthenticated]);
 
   return (
     <Container onSubmit={handleSubmit}>

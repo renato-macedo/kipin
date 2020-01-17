@@ -1,16 +1,15 @@
-import { User } from 'types';
+import { User } from '../types';
 
-export const GET_CONTACTS = 'GET_CONTACTS';
-export const ADD_CONTACT = 'ADD_CONTACT';
-export const DELETE_CONTACT = 'DELETE_CONTACT';
-export const SET_CURRENT = 'SET_CURRENT';
-export const CLEAR_CURRENT = 'CLEAR_CURRENT';
-export const UPDATE_CONTACT = 'UPDATE_CONTACT';
-export const FILTER_CONTACTS = 'FILTER_CONTACT';
-export const CLEAR_CONTACTS = 'CLEAR_CONTACTS';
-export const CONTACT_ERROR = 'CONTACT_ERROR';
+export const GET_ITEMS = 'GET_ITEMS';
+export const ADD_ITEM = 'ADD_ITEM';
+export const DELETE_ITEM = 'DELETE_ITEM';
+
+export const UPDATE_ITEM = 'UPDATE_ITEM';
+// export const FILTER_CONTACTS = 'FILTER_CONTACT';
+//export const CLEAR_CONTACTS = 'CLEAR_CONTACTS';
+export const ITEM_ERROR = 'ITEM_ERROR';
 export const UPDATE_ERROR = 'UPDATE_ERROR';
-export const CLEAR_FILTER = 'CLEAR_FILTER';
+//export const CLEAR_FILTER = 'CLEAR_FILTER';
 export const SET_ALERT = 'SET_ALERT';
 export const REMOVE_ALERT = 'REMOVE_ALERT';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
@@ -29,7 +28,7 @@ export interface iFormData {
 }
 
 export interface iAuthContext {
-  //token: string | null;
+  // token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   user: User | null;
@@ -42,6 +41,7 @@ export interface iAuthContext {
 }
 
 export interface iAuthState {
+  token?: string;
   isAuthenticated: boolean;
   loading: boolean;
   user: User | null;
@@ -52,7 +52,38 @@ export interface iAuthState {
 //   token: string;
 // }
 
+export interface ItemInterface {
+  id: string;
+  body: string;
+  title: string;
+}
+
+export interface ItemStateInterface {
+  items: Array<ItemInterface> | null;
+  error?: string;
+  loading: boolean;
+}
+
+export interface ItemsContextInterface {
+  items: Array<ItemInterface> | null;
+  error?: string;
+  loading: boolean;
+  getItems: () => void;
+  addItem: (item: ItemInterface) => void;
+  deleteItem: (itemId: string) => void;
+  updateItem: (item: ItemInterface) => void;
+}
+export interface ItemAction {
+  type: string;
+  //payload: Array<ItemInterface> | [ItemInterface] | string;
+  payload: {
+    items?: Array<ItemInterface>;
+    item?: ItemInterface;
+    error?: string;
+  };
+}
+
 export interface Action {
   type: string;
-  payload: User | null;
+  payload: User | string | null;
 }

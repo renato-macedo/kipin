@@ -22,20 +22,18 @@ const AuthReducer: any = (
         ...state,
         isAuthenticated: true,
         loading: false,
-        token: null
+        token: action.payload
       };
 
     case USER_LOADED:
-      console.log('USER LOADED')
+      console.log('USER LOADED');
       return {
         ...state,
-        user: action.payload,
-        isAuthenticated: true,
-        token: null
+        user: action.payload
       };
     case LOGIN_FAIL:
     case AUTH_ERROR:
-      console.error('AUTH ERROR')
+      console.error('AUTH ERROR');
       return {
         ...state,
         token: null,

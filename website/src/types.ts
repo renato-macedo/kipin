@@ -1,8 +1,4 @@
-export interface ItemInterface {
-  Id: string;
-  body: string;
-  title: string;
-}
+import { ItemInterface } from './context/types';
 
 export interface ItemProps {
   key: any;
@@ -11,7 +7,7 @@ export interface ItemProps {
 }
 
 export interface ItemListProps {
-  items: ItemInterface[];
+  items: Array<ItemInterface>;
 }
 
 export interface User {
