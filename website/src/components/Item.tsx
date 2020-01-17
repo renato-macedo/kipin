@@ -1,6 +1,7 @@
 import React, { Props, PropsWithChildren } from 'react';
 import { Card, StyledBody, StyledAction, StyledThumbnail } from 'baseui/card';
 import { Button } from 'baseui/button';
+import EditInPlace from './EditInPlace';
 
 import { ItemInterface } from '../context/types';
 
@@ -11,7 +12,9 @@ export default function Item(props: PropsWithChildren<ItemInterface>) {
       <StyledThumbnail
         src={'https://source.unsplash.com/user/erondu/300x300'}
       />
-      <StyledBody>{body}</StyledBody>
+      <StyledBody>
+        <EditInPlace id={id} title={title} body={body} />
+      </StyledBody>
       <StyledAction>
         <Button overrides={{ BaseButton: { style: { width: '100%' } } }}>
           See
