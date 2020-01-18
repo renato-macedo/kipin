@@ -3,44 +3,51 @@ import React, {
   useEffect,
   useContext,
   PropsWithChildren,
-  Fragment
+  useRef,
+  Fragment,
+  Ref
 } from 'react';
 import { ItemInterface } from '../context/types';
 import ItemsContext from '../context/items/ItemsContext';
-
+import { Textarea } from 'baseui/textarea';
+import { Paragraph1 } from 'baseui/typography';
 export default function EditInPlace(props: PropsWithChildren<ItemInterface>) {
   const { body, id, title } = props;
-  const [mode, setMode] = useState('read');
+  const [editing, setEditing] = useState(false);
   const [content, setContent] = useState('');
   const { updateItem } = useContext(ItemsContext);
-
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   function ChangeMode() {
-    setMode('update');
+    setEditing(true);
   }
 
   function finishEditing() {
-    setMode('read');
-    updateItem({ id, body: content, title });
+    setEditing(false);
+    if (body !== content) {
+      updateItem({ id, body: content, title });
+    }
   }
-
-  function changeContent(e: any) {
-    setContent(e.target.value);
-  }
-
   useEffect(() => {
     setContent(body);
-  }, [mode]);
+    if (editing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [editing]);
 
-  if (mode === 'update') {
+  if (editing) {
     return (
-      <input
-        type="text"
+      <Textarea
+        inputRef={inputRef}
         onBlur={finishEditing}
-        onChange={changeContent}
+        onChange={e => setContent(e.currentTarget.value)}
         value={content}
       />
     );
   }
 
-  return <p onDoubleClick={ChangeMode}>{body}</p>;
+  return (
+    <Paragraph1>
+      <span onClick={ChangeMode}>{body}</span>
+    </Paragraph1>
+  );
 }
