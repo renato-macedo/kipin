@@ -39,13 +39,8 @@ function ItemList() {
     >
       {items ? (
         items.map((item: any) => (
-          <FlexGridItem>
-            <Item
-              key={item.id}
-              id={item.id}
-              title={item.title}
-              body={item.body}
-            />
+          <FlexGridItem key={item.id}>
+            <Item id={item.id} title={item.title} body={item.body} />
           </FlexGridItem>
         ))
       ) : (
