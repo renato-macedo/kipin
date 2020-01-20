@@ -16,6 +16,10 @@ export default function Item(props: PropsWithChildren<ItemInterface>) {
   const { title, body, id } = props;
   const [css] = useStyletron();
   const { deleteItem } = useContext(ItemsContext);
+
+  function handleDelete() {
+    deleteItem(id);
+  }
   return (
     <Fragment>
       <Card overrides={{ Root: { style: { width: '100%' } } }} title={title}>
@@ -33,7 +37,7 @@ export default function Item(props: PropsWithChildren<ItemInterface>) {
             <Button $as="a" href={body} size="compact" target="_blank">
               Visit
             </Button>
-            <Button size="compact" kind="minimal">
+            <Button size="compact" kind="minimal" onClick={handleDelete}>
               Delete
             </Button>
           </div>

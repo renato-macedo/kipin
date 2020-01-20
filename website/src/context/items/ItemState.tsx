@@ -41,9 +41,21 @@ function ItemState(props: any): any {
     }
   }
   async function addItem() {}
-  async function deleteItem() {}
+  async function deleteItem(itemId: string) {
+    try {
+      await axios.delete(`http://localhost:3000/items/${itemId}`);
+      dispatch({
+        type: DELETE_ITEM,
+        payload: { item: { id: itemId } }
+      });
+    } catch (error) {
+      dispatch({
+        type: ITEM_ERROR,
+        payload: { error: error.response.data.error }
+      });
+    }
+  }
   async function updateItem(item: ItemInterface) {
-    console.log;
     try {
       await axios.patch(`http://localhost:3000/items/${item.id}`, item);
       dispatch({
