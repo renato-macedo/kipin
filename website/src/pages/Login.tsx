@@ -6,8 +6,9 @@ import { FormControl } from 'baseui/form-control';
 import { Input } from 'baseui/input';
 import { useStyletron, styled } from 'baseui';
 import AuthContext from '../context/auth/AuthContext';
+import { Block } from 'baseui/block';
 
-const Container = styled('form', {
+const FormContainer = styled('form', {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -32,7 +33,7 @@ export default function Login(props: any) {
 
   useEffect(() => {
     if (isAuthenticated) {
-      props.history.push('/dashboard');
+      props.history.push('/');
     }
     // if (error === 'Invalid Credentials') {
     //   alert(error);
@@ -42,50 +43,56 @@ export default function Login(props: any) {
   }, [error, isAuthenticated]);
 
   return (
-    <Container onSubmit={handleSubmit}>
-      <Card
-        title="Login"
-        overrides={{
-          Title: { style: { textAlign: 'center' } },
-          Root: { style: { width: '30%' } }
-        }}
-      >
-        <StyledBody>
-          <FormControl label="Email">
-            <Input
-              value={email}
-              type="text"
-              placeholder="Email"
-              onChange={(event: React.FormEvent<HTMLInputElement>) =>
-                setEmail(event.currentTarget.value)
-              }
-              clearable
-            />
-          </FormControl>
-          <FormControl label="Password">
-            <Input
-              type="password"
-              value={password}
-              placeholder="Password"
-              onChange={(event: React.FormEvent<HTMLInputElement>) =>
-                setPassword(event.currentTarget.value)
-              }
-            />
-          </FormControl>
-        </StyledBody>
+    <Block
+      width={['100%', '100%', '60%', '30%']}
+      margin="0 auto"
+      backgroundColor="red"
+    >
+      <FormContainer onSubmit={handleSubmit}>
+        <Card
+          title="Login"
+          overrides={{
+            Title: { style: { textAlign: 'center' } },
+            Root: { style: { width: '100%' } }
+          }}
+        >
+          <StyledBody>
+            <FormControl label="Email">
+              <Input
+                value={email}
+                type="text"
+                placeholder="Email"
+                onChange={(event: React.FormEvent<HTMLInputElement>) =>
+                  setEmail(event.currentTarget.value)
+                }
+                clearable
+              />
+            </FormControl>
+            <FormControl label="Password">
+              <Input
+                type="password"
+                value={password}
+                placeholder="Password"
+                onChange={(event: React.FormEvent<HTMLInputElement>) =>
+                  setPassword(event.currentTarget.value)
+                }
+              />
+            </FormControl>
+          </StyledBody>
 
-        <StyledAction>
-          <Button
-            overrides={{ BaseButton: { style: { width: '100%' } } }}
-            type="submit"
-          >
-            Login
-          </Button>
-          <StyledLink style={{ cursor: 'pointer' }}>
-            Forgot Password?
-          </StyledLink>
-        </StyledAction>
-      </Card>
-    </Container>
+          <StyledAction>
+            <Button
+              overrides={{ BaseButton: { style: { width: '100%' } } }}
+              type="submit"
+            >
+              Log In
+            </Button>
+            <StyledLink style={{ cursor: 'pointer' }}>
+              Forgot Password?
+            </StyledLink>
+          </StyledAction>
+        </Card>
+      </FormContainer>
+    </Block>
   );
 }

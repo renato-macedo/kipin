@@ -1,42 +1,80 @@
-import React, { useContext, Fragment, PropsWithChildren } from 'react';
+import React, { useContext, Fragment, useState } from 'react';
 import {
   HeaderNavigation,
   ALIGN,
   StyledNavigationList,
   StyledNavigationItem
 } from 'baseui/header-navigation';
+
 import { Label1 } from 'baseui/typography';
 import { Button } from 'baseui/button';
-import { withRouter, Link } from 'react-router-dom';
+import { Plus, Menu as Burger } from 'baseui/icon';
+import { Link } from 'react-router-dom';
 import AuthContext from '../context/auth/AuthContext';
-import { User } from 'types';
-
+import { useStyletron } from 'baseui';
+import { Display4, H4 } from 'baseui/typography';
+import Menu from './Sidebar';
+import { Block } from 'baseui/block';
 export default function Nav() {
   const { isAuthenticated, user } = useContext(AuthContext);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
-    <HeaderNavigation>
-      <StyledNavigationList $align={ALIGN.left}>
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <StyledNavigationItem>Kipin</StyledNavigationItem>
-        </Link>
-      </StyledNavigationList>
-      <StyledNavigationList $align={ALIGN.center} />
-      {isAuthenticated ? <HelloUser name={user?.name} /> : <Unauthenticated />}
-    </HeaderNavigation>
+    <Block width={['100%', '100%', '50%']} margin="0 auto">
+      <HeaderNavigation
+        overrides={{
+          Root: {
+            style: {
+              backgroundColor: 'black'
+            }
+          }
+        }}
+      >
+        <StyledNavigationList $align={ALIGN.left}>
+          <StyledNavigationItem>
+            <Button onClick={() => setIsMenuOpen(true)}>
+              <Burger size={32} />
+            </Button>
+          </StyledNavigationItem>
+          {/* <StyledNavigationItem>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <StyledNavigationItem>
+              <H4 color="white">Kipin</H4>
+            </StyledNavigationItem>
+          </Link>
+        </StyledNavigationItem> */}
+        </StyledNavigationList>
+        <StyledNavigationList $align={ALIGN.center} />
+        {!isAuthenticated ? (
+          <Authenticated name={user?.name} />
+        ) : (
+          <Unauthenticated />
+        )}
+      </HeaderNavigation>
+      <Menu setIsOpen={setIsMenuOpen} isOpen={isMenuOpen} />
+    </Block>
     // <h1>Nav</h1>
   );
 }
 
-function HelloUser(props: any) {
+function Authenticated(props: any) {
+  const [css, theme] = useStyletron();
+
   return (
     <Fragment>
-      <h1>Hello {props.name}</h1>
       <StyledNavigationList $align={ALIGN.right}>
         <StyledNavigationItem>
+          <div className={css({ paddingBottom: theme.sizing.scale300 })}>
+            <Button endEnhancer={Plus}>New</Button>
+          </div>
+          {/* <Button kind="minimal" shape="round">
+            <Plus size={32} />
+          </Button> */}
+        </StyledNavigationItem>
+        {/* <StyledNavigationItem>
           <Link to="/dashboard" style={{ textDecoration: 'none' }}>
             <Button>My List</Button>
           </Link>
-        </StyledNavigationItem>
+        </StyledNavigationItem> */}
       </StyledNavigationList>
     </Fragment>
   );
@@ -60,5 +98,3 @@ function Unauthenticated() {
     </Fragment>
   );
 }
-
-function CustomLink() {}
