@@ -36,8 +36,8 @@ export default function Home(): JSX.Element {
         // })}
       >
         <h1>My List</h1>
-        <ItemList />
-        {/* {isAuthenticated ? <ItemList /> : <h1>Usuário não autenticado</h1>} */}
+        {/* <ItemList /> */}
+        {isAuthenticated ? <ItemList /> : <h1>Usuário não autenticado</h1>}
       </Block>
     </Fragment>
   );

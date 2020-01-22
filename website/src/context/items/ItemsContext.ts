@@ -7,7 +7,8 @@ const ItemsContext = createContext<ItemsContextInterface>({
   getItems: () => {},
   addItem: () => {},
   deleteItem: () => {},
-  updateItem: () => {}
+  updateItem: () => {},
+  setLoading: () => {}
 });
 
 export default ItemsContext;

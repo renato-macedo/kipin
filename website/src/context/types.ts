@@ -20,6 +20,7 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+export const SET_LOADING = 'SET_LOADING';
 
 export interface iFormData {
   name?: string;
@@ -69,9 +70,10 @@ export interface ItemsContextInterface {
   error?: string;
   loading: boolean;
   getItems: () => void;
-  addItem: (item: ItemInterface) => void;
+  addItem: (body: string) => void;
   deleteItem: (itemId: string) => void;
   updateItem: (item: ItemInterface) => void;
+  setLoading: (loading: boolean) => void;
 }
 export interface ItemAction {
   type: string;
@@ -80,6 +82,7 @@ export interface ItemAction {
     items?: Array<ItemInterface>;
     item?: ItemInterface;
     error?: string;
+    loading: boolean;
   };
 }
 

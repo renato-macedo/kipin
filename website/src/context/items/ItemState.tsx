@@ -13,7 +13,8 @@ import {
   ItemAction,
   UPDATE_ITEM,
   ITEM_ERROR,
-  ItemInterface
+  ItemInterface,
+  SET_LOADING
 } from '../types';
 
 import axios from 'axios';
@@ -25,13 +26,14 @@ function ItemState(props: any): any {
   };
 
   const [state, dispatch] = useReducer(ItemReducer, initialState);
+
   async function getItems() {
     try {
       const response = await axios.get('http://localhost:3000/items');
       console.log('RESPOSTA', response.data);
       dispatch({
         type: GET_ITEMS,
-        payload: { items: response.data }
+        payload: { items: response.data, loading: false }
       });
     } catch (error) {
       dispatch({
@@ -40,34 +42,53 @@ function ItemState(props: any): any {
       });
     }
   }
-  async function addItem() {}
+
+  async function addItem(body: string) {
+    const data = { body, title: 'title' };
+    try {
+      const response = await axios.post('http://localhost:3000/items', data);
+      dispatch({
+        type: ADD_ITEM,
+        payload: { item: response.data, loading: false }
+      });
+    } catch (error) {}
+  }
+
   async function deleteItem(itemId: string) {
     try {
       await axios.delete(`http://localhost:3000/items/${itemId}`);
       dispatch({
         type: DELETE_ITEM,
-        payload: { item: { id: itemId } }
+        payload: { item: { id: itemId, body: '', title: '' }, loading: false }
       });
     } catch (error) {
       dispatch({
         type: ITEM_ERROR,
-        payload: { error: error.response.data.error }
+        payload: { error: error.response.data.error, loading: false }
       });
     }
   }
+
   async function updateItem(item: ItemInterface) {
     try {
       await axios.patch(`http://localhost:3000/items/${item.id}`, item);
       dispatch({
         type: UPDATE_ITEM,
-        payload: { item }
+        payload: { item, loading: false }
       });
     } catch (error) {
       dispatch({
         type: UPDATE_ERROR,
-        payload: { error: error.response.data.error }
+        payload: { error: error.response.data.error, loading: false }
       });
     }
+  }
+
+  function setLoading(loading: boolean) {
+    dispatch({
+      type: SET_LOADING,
+      payload: { loading }
+    });
   }
   return (
     <ItemProvider
@@ -78,7 +99,8 @@ function ItemState(props: any): any {
         getItems,
         addItem,
         deleteItem,
-        updateItem
+        updateItem,
+        setLoading
       }}
     >
       {props.children}

@@ -6,6 +6,7 @@ import {
   StyledNavigationItem
 } from 'baseui/header-navigation';
 
+import AddItemForm from './AddItemForm';
 import { Label1 } from 'baseui/typography';
 import { Button } from 'baseui/button';
 import { Plus, Menu as Burger } from 'baseui/icon';
@@ -15,6 +16,7 @@ import { useStyletron } from 'baseui';
 import { Display4, H4 } from 'baseui/typography';
 import Menu from './Sidebar';
 import { Block } from 'baseui/block';
+
 export default function Nav() {
   const { isAuthenticated, user } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,7 +46,7 @@ export default function Nav() {
         </StyledNavigationItem> */}
         </StyledNavigationList>
         <StyledNavigationList $align={ALIGN.center} />
-        {!isAuthenticated ? (
+        {isAuthenticated ? (
           <Authenticated name={user?.name} />
         ) : (
           <Unauthenticated />
@@ -58,13 +60,19 @@ export default function Nav() {
 
 function Authenticated(props: any) {
   const [css, theme] = useStyletron();
+  const [isOpen, setIsOpen] = useState(false);
 
+  function close() {
+    setIsOpen(false);
+  }
   return (
     <Fragment>
       <StyledNavigationList $align={ALIGN.right}>
         <StyledNavigationItem>
           <div className={css({ paddingBottom: theme.sizing.scale300 })}>
-            <Button endEnhancer={Plus}>New</Button>
+            <Button endEnhancer={Plus} onClick={() => setIsOpen(true)}>
+              New
+            </Button>
           </div>
           {/* <Button kind="minimal" shape="round">
             <Plus size={32} />
@@ -76,6 +84,7 @@ function Authenticated(props: any) {
           </Link>
         </StyledNavigationItem> */}
       </StyledNavigationList>
+      <AddItemForm isOpen={isOpen} close={close} />
     </Fragment>
   );
 }
