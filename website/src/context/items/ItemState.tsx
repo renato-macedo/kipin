@@ -30,7 +30,7 @@ function ItemState(props: any): any {
   async function getItems() {
     try {
       const response = await axios.get('http://localhost:3000/items');
-      console.log('RESPOSTA', response.data);
+      // console.log('RESPOSTA', response.data);
       dispatch({
         type: GET_ITEMS,
         payload: { items: response.data, loading: false }
@@ -90,6 +90,7 @@ function ItemState(props: any): any {
       payload: { loading }
     });
   }
+
   return (
     <ItemProvider
       value={{

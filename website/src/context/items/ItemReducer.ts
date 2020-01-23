@@ -17,7 +17,7 @@ function ItemReducer(
   const { items, item, error, loading } = action.payload;
   switch (action.type) {
     case GET_ITEMS:
-      console.log('GET ITEMS', items);
+      // console.log('GET ITEMS', items);
       return {
         items: action.payload.items ? action.payload.items : [],
         loading

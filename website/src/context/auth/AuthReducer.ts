@@ -3,21 +3,24 @@ import {
   LOGIN_FAIL,
   AUTH_ERROR,
   Action,
-  iAuthState,
-  USER_LOADED
+  AuthStateInterface,
+  USER_LOADED,
+  REGISTER_FAIL,
+  REGISTER_SUCCESS,
+  SET_LOADING,
+  LOGOUT
 } from '../types';
-
-import { Reducer } from 'react';
 
 const AuthReducer: any = (
   // Reducer<iAuthState, Action>
-  state: iAuthState,
+  state: AuthStateInterface,
   action: Action
 ) => {
   switch (action.type) {
+    case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
       //localStorage.setItem('token', action.payload.token);
-      console.log('LOGIN SUCCESS');
+      // console.log('LOGIN SUCCESS');
       return {
         ...state,
         isAuthenticated: true,
@@ -26,14 +29,15 @@ const AuthReducer: any = (
       };
 
     case USER_LOADED:
-      console.log('USER LOADED');
+      // console.log('USER LOADED');
       return {
         ...state,
-        user: action.payload
+        user: action.payload,
+        loading: false
       };
+    case REGISTER_FAIL:
     case LOGIN_FAIL:
     case AUTH_ERROR:
-      console.error('AUTH ERROR');
       return {
         ...state,
         token: null,
@@ -42,6 +46,21 @@ const AuthReducer: any = (
         user: null,
         error: action.payload
       };
+
+    case SET_LOADING:
+      return {
+        ...state,
+        loading: action.payload
+      };
+    case LOGOUT: {
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
+        loading: false,
+        error: null
+      };
+    }
     default:
       return state;
   }

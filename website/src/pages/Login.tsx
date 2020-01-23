@@ -28,7 +28,7 @@ export default function Login(props: any) {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     login({ email, password });
-    // console.log(event, email, password);
+    // // console.log(event, email, password);
   }
 
   useEffect(() => {

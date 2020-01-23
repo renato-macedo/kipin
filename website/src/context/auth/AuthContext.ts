@@ -1,7 +1,7 @@
 import { createContext } from 'react';
-import { iAuthContext } from '../types';
+import { AuthContextInterface } from '../types';
 
-const AuthContext = createContext<iAuthContext>({
+const AuthContext = createContext<AuthContextInterface>({
   isAuthenticated: false,
   loading: false,
   loadUser: () => {},
@@ -10,8 +10,9 @@ const AuthContext = createContext<iAuthContext>({
   logout: () => {},
   // token: '',
   user: null,
-  error: {},
-  clearErrors: () => {}
+  error: null,
+  clearErrors: () => {},
+  setLoading: () => {}
 });
 
 export default AuthContext;

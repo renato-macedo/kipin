@@ -14,10 +14,19 @@ import { useStyletron } from 'baseui';
 import { Drawer, ANCHOR, SIZE } from 'baseui/drawer';
 import { StatefulMenu } from 'baseui/menu';
 import { ChevronRight } from 'baseui/icon';
+import AuthContext from '../context/auth/AuthContext';
 
 export default function Menu(props: any) {
   const { isOpen, setIsOpen } = props;
   //const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useContext(AuthContext);
+
+  function handleSelect({ item }: any) {
+    if (item.option === 'Log Out') {
+      logout();
+      //props.history.push('/login');
+    }
+  }
   return (
     <Drawer
       anchor={ANCHOR.left}
@@ -32,7 +41,7 @@ export default function Menu(props: any) {
           { option: 'Settings' },
           { option: 'Log Out' }
         ]}
-        onItemSelect={() => alert('select')}
+        onItemSelect={handleSelect}
         overrides={{
           List: {
             style: {
@@ -75,59 +84,58 @@ export default function Menu(props: any) {
   );
 }
 
-function MenuItems() {
-  const options = ['My List', 'Favorites', 'Settings', 'Log Out'];
-  const [css] = useStyletron();
-  return (
-    <ul
-      className={css({
-        width: '375px',
-        paddingLeft: 0,
-        paddingRight: 0
-      })}
-    >
-      {options.map(option => (
-        <ListItem
-          key={option}
-          artworkSize={ARTWORK_SIZES.SMALL}
-          overrides={{
-            EndEnhancerContainer: {
-              style: ({ $theme }) => {
-                return {};
-              }
-            },
-            ArtworkContainer: {
-              style: ({ $theme }) => {
-                return {};
-              }
-            },
-            Root: {
-              style: {
-                ':hover': {
-                  backgroundColor: '#E2E2E2'
-                }
-              }
-            },
-            Content: {
-              style: ({ $theme }) => {
-                return {};
-              }
-            }
-          }}
-        >
-          <div
-            onClick={() => alert(1)}
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            <ListItemLabel>{option}</ListItemLabel>
-          </div>
-        </ListItem>
-      ))}
-    </ul>
-  );
-}
+// function MenuItems() {
+//   const options = ['My List', 'Favorites', 'Settings', 'Log Out'];
+//   const [css] = useStyletron();
+//   return (
+//     <ul
+//       className={css({
+//         width: '375px',
+//         paddingLeft: 0,
+//         paddingRight: 0
+//       })}
+//     >
+//       {options.map(option => (
+//         <ListItem
+//           key={option}
+//           artworkSize={ARTWORK_SIZES.SMALL}
+//           overrides={{
+//             EndEnhancerContainer: {
+//               style: ({ $theme }) => {
+//                 return {};
+//               }
+//             },
+//             ArtworkContainer: {
+//               style: ({ $theme }) => {
+//                 return {};
+//               }
+//             },
+//             Root: {
+//               style: {
+//                 ':hover': {
+//                   backgroundColor: '#E2E2E2'
+//                 }
+//               }
+//             },
+//             Content: {
+//               style: ({ $theme }) => {
+//                 return {};
+//               }
+//             }
+//           }}
+//         >
+//           <div
+//             style={{
+//               width: '100%',
+//               height: '100%',
+//               display: 'flex',
+//               alignItems: 'center'
+//             }}
+//           >
+//             <ListItemLabel>{option}</ListItemLabel>
+//           </div>
+//         </ListItem>
+//       ))}
+//     </ul>
+//   );
+// }

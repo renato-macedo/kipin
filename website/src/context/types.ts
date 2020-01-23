@@ -1,15 +1,11 @@
-import { User } from '../types';
-
 export const GET_ITEMS = 'GET_ITEMS';
 export const ADD_ITEM = 'ADD_ITEM';
 export const DELETE_ITEM = 'DELETE_ITEM';
 
 export const UPDATE_ITEM = 'UPDATE_ITEM';
-// export const FILTER_CONTACTS = 'FILTER_CONTACT';
-//export const CLEAR_CONTACTS = 'CLEAR_CONTACTS';
 export const ITEM_ERROR = 'ITEM_ERROR';
 export const UPDATE_ERROR = 'UPDATE_ERROR';
-//export const CLEAR_FILTER = 'CLEAR_FILTER';
+
 export const SET_ALERT = 'SET_ALERT';
 export const REMOVE_ALERT = 'REMOVE_ALERT';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
@@ -22,31 +18,48 @@ export const LOGOUT = 'LOGOUT';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const SET_LOADING = 'SET_LOADING';
 
-export interface iFormData {
+export interface ItemProps {
+  key: any;
+  body: string;
+  title: string;
+}
+
+export interface ItemListProps {
+  items: Array<ItemInterface>;
+}
+
+export interface User {
+  name: string;
+  email: string;
+  token?: string;
+}
+
+export interface FormDataInterface {
   name?: string;
   email: string;
   password: string;
 }
 
-export interface iAuthContext {
+export interface AuthContextInterface {
   // token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   user: User | null;
-  error: {};
-  login: (formData: iFormData) => void;
-  register?: (formData: iFormData) => void;
-  logout?: () => void;
+  error: string | null;
+  login: (formData: FormDataInterface) => void;
+  register: (formData: FormDataInterface) => void;
+  logout: () => void;
   clearErrors: () => void;
   loadUser: () => void;
+  setLoading: (loading: boolean) => void;
 }
 
-export interface iAuthState {
+export interface AuthStateInterface {
   token?: string;
   isAuthenticated: boolean;
   loading: boolean;
   user: User | null;
-  error: {};
+  error: string | null;
 }
 
 // export interface AuthPayload {
@@ -88,5 +101,5 @@ export interface ItemAction {
 
 export interface Action {
   type: string;
-  payload: User | string | null;
+  payload: User | string | boolean | null;
 }

@@ -1,7 +1,8 @@
 ## TO DO
 
 - [x] Login
-- [ ] Register
+- [x] Register
+- [x] Logout
 - [ ] Log In and Sign Up form validation
 - [ ] Error messages
 - [x] Fetch Items

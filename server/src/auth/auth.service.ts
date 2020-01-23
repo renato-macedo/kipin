@@ -10,14 +10,15 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
-  async validateUser(email: string, pass: string): Promise<User> {
+  async validateUser(data: LoginUserDto): Promise<User> {
+    const { email, password: givenPassword } = data;
     const user = await this.userService.findOne(email);
 
     if (user) {
       const { password } = user;
-      const isSamePassword = await bcrypt.compare(pass, password);
+      const isSamePassword = await bcrypt.compare(givenPassword, password);
       if (isSamePassword) {
         return this.userService.sanitizeUser(user);
       }
@@ -27,20 +28,20 @@ export class AuthService {
     return null;
   }
 
-  generateAccessToken(user: User) {
-    const payload = { email: user.email, sub: user.id };
+  generateAccessToken({ userEmail, userId }) {
+    const payload = { email: userEmail, sub: userId };
     return this.jwtService.signAsync(payload, {
-      expiresIn: '1min'
+      expiresIn: '1min',
     });
   }
 
   generateRefreshToken(userId) {
-    return this.jwtService.signAsync({ sub: userId }, {
-      expiresIn: '3min'
-    })
-  }
-  register(user: CreateUserDto) {
-    return this.userService.create(user);
+    return this.jwtService.signAsync(
+      { sub: userId },
+      {
+        expiresIn: '3min',
+      },
+    );
   }
 
   async loadUser(userId) {

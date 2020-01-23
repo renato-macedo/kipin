@@ -4,6 +4,7 @@ import { User } from './user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './user.dto';
 import * as bcrypt from 'bcrypt';
+
 @Injectable()
 export class UserService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
@@ -13,8 +14,7 @@ export class UserService {
     return user.depopulate('password');
   }
 
-  async create(data: CreateUserDto) {
-    const { name, password, email } = data;
+  async create({ name, email, password }) {
     const user = await this.userModel.findOne({ email });
 
     if (user) {
