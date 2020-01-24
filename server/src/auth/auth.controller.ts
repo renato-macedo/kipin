@@ -26,7 +26,7 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Req() req, @Res() res: Response) {
-    console.log(req.user);
+    //console.log(req.user);
     const { email, id } = req.user;
     const [token, refresh_token] = await Promise.all([
       this.authService.generateAccessToken({ userEmail: email, userId: id }),
@@ -51,11 +51,11 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() data: CreateUserDto, @Res() res) {
-    console.log({ data });
+    //console.log({ data });
     //return this.authService.register(data);
     const { name, password, email } = data;
     const user = await this.userService.create({ name, password, email });
-    console.log('iuiuiuiu');
+    //console.log('iuiuiuiu');
     const [token, refresh_token] = await Promise.all([
       this.authService.generateAccessToken({
         userEmail: user.email,
@@ -74,6 +74,7 @@ export class AuthController {
       .cookie('refresh_token', refresh_token, {
         httpOnly: true,
         maxAge: 120000,
+        sameSite: false,
       })
       .json({ token, expiresIn });
   }
@@ -87,12 +88,22 @@ export class AuthController {
   @Get('refresh_token')
   refresh(@Req() req: Request) {
     if (req.cookies.refresh_token) {
-      console.log('cookie', req.cookies);
-      console.log(JSON.stringify(req.cookies, null, 2));
+      //console.log('cookie', req.cookies);
+      //console.log(JSON.stringify(req.cookies, null, 2));
 
       return { token: req.cookies.refresh_token };
     }
 
+    throw new BadRequestException('No cookie');
+  }
+
+  @Get('logout')
+  logout(@Req() req: Request, @Res() res: Response) {
+    if (req.cookies.refresh_token) {
+      return res
+        .clearCookie('refresh_token')
+        .json({ message: 'Log Out successfully' });
+    }
     throw new BadRequestException('No cookie');
   }
 }

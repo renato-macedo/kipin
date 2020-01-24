@@ -12,7 +12,10 @@ const AuthContext = createContext<AuthContextInterface>({
   user: null,
   error: null,
   clearErrors: () => {},
-  setLoading: () => {}
+  setLoading: () => {},
+  refreshToken: async () => {
+    return [false, 'no token'];
+  }
 });
 
 export default AuthContext;

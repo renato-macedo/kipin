@@ -33,6 +33,7 @@ function ItemList() {
   const { items, getItems, loading } = useContext(ItemsContext);
 
   useEffect(() => {
+    console.log({ items }, { loading });
     getItems();
   }, []);
 

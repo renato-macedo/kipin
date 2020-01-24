@@ -15,7 +15,8 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   SET_LOADING,
-  LOGOUT
+  LOGOUT,
+  CONFIRM_COOKIE
 } from '../types';
 
 import axios from 'axios';
@@ -28,7 +29,7 @@ function AuthState(props: any): any {
   const initialState: AuthStateInterface = {
     token: accessToken,
     isAuthenticated: false,
-    loading: false,
+    loading: true,
     user: null,
     error: null
   };
@@ -48,7 +49,7 @@ function AuthState(props: any): any {
       // console.log(response.headers);
 
       accessToken = response.data.token;
-
+      setAuthToken(accessToken);
       dispatch({
         type: LOGIN_SUCCESS,
         payload: response.data.token
@@ -72,7 +73,7 @@ function AuthState(props: any): any {
       // // console.log(response.headers);
 
       accessToken = response.data.token;
-
+      setAuthToken(accessToken);
       dispatch({
         type: REGISTER_SUCCESS,
         payload: response.data.token
@@ -92,56 +93,65 @@ function AuthState(props: any): any {
     }
   }
 
-  async function refreshToken(): Promise<[boolean, string]> {
+  async function refreshToken(): Promise<void> {
     try {
       const response = await axios.get(
         'http://localhost:3000/auth/refresh_token'
       );
       // console.log(response.data);
-      return [true, response.data.token];
+      setAuthToken(response.data.token);
+      dispatch({
+        type: CONFIRM_COOKIE,
+        payload: null
+      });
+      //return [true, response.data.token];
     } catch (error) {
-      // console.log(error.response.data);
-      return [false, error.response.data.error];
+      dispatch({
+        type: AUTH_ERROR,
+        payload: error.response.data.error
+      });
+      console.log(error.response.data);
+      //return [false, error.response.error];
     }
   }
 
-  // Load User
-  async function loadUser() {
-    // console.log('TOKEN', accessToken);
-    // if the token is still in memory use on the request
-    if (accessToken) {
-      setAuthToken(accessToken);
-    }
+  // async function loadUser() {
+  //   try {
+  //     const [success, tokenOrError] = await refreshToken();
 
+  //     if (success) {
+  //       setAuthToken(tokenOrError);
+  //       const response = await axios.get('http://localhost:3000/auth/user');
+  //       dispatch({
+  //         type: USER_LOADED,
+  //         payload: response.data
+  //       });
+  //     } else {
+  //       dispatch({
+  //         type: AUTH_ERROR,
+  //         payload: tokenOrError
+  //       });
+  //     }
+  //   } catch (error) {
+  //     dispatch({
+  //       type: AUTH_ERROR,
+  //       payload: error.response.data.message
+  //     });
+  //   }
+  // }
+
+  async function loadUser() {
     try {
       const response = await axios.get('http://localhost:3000/auth/user');
-
-      // if everything is okay, load the user
-      // console.log('request', response.data);
       dispatch({
         type: USER_LOADED,
         payload: response.data
       });
-
-      // console.log('usuario carregado');
     } catch (error) {
-      // if something went wrong, it means the token is not in memory or is expired, either way try to refresh
-      // console.log('no token');
-
-      const [success, data] = await refreshToken();
-
-      if (success) {
-        // console.log('success', data);
-        accessToken = data;
-        // console.log('calling loadUser again');
-        loadUser();
-      } else {
-        // console.log('no success');
-        dispatch({
-          type: AUTH_ERROR,
-          payload: error.response.data.message
-        });
-      }
+      dispatch({
+        type: AUTH_ERROR,
+        payload: error.response.data.message
+      });
     }
   }
 
@@ -154,11 +164,20 @@ function AuthState(props: any): any {
     });
   }
 
-  function logout() {
-    dispatch({
-      type: LOGOUT,
-      payload: null
-    });
+  async function logout() {
+    try {
+      const response = await axios.get('http://localhost:3000/auth/logout');
+      dispatch({
+        type: LOGOUT,
+        payload: null
+      });
+      console.log(response.data);
+    } catch (error) {
+      dispatch({
+        type: AUTH_ERROR,
+        payload: 'Something went wrong'
+      });
+    }
   }
   return (
     <AuthContext.Provider
@@ -173,7 +192,8 @@ function AuthState(props: any): any {
         user: state.user,
         clearErrors,
         setLoading,
-        logout
+        logout,
+        refreshToken
       }}
     >
       {props.children}

@@ -18,10 +18,8 @@ const FormContainer = styled('form', {
 });
 
 export default function Login(props: any) {
-  const { login, error, clearErrors, loadUser, isAuthenticated } = useContext(
-    AuthContext
-  );
-  const [css, theme] = useStyletron();
+  const { login, isAuthenticated, error } = useContext(AuthContext);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -32,15 +30,11 @@ export default function Login(props: any) {
   }
 
   useEffect(() => {
+    console.log('login', { isAuthenticated });
     if (isAuthenticated) {
       props.history.push('/');
     }
-    // if (error === 'Invalid Credentials') {
-    //   alert(error);
-    //   //setAlert(error, 'danger');
-    //   //clearErrors();
-    // }
-  }, [error, isAuthenticated]);
+  }, [isAuthenticated]);
 
   return (
     <Block

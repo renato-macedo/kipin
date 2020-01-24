@@ -20,7 +20,7 @@ function ItemReducer(
       // console.log('GET ITEMS', items);
       return {
         items: action.payload.items ? action.payload.items : [],
-        loading
+        loading: false
       };
     case ADD_ITEM:
       if (state.items) {
@@ -37,7 +37,7 @@ function ItemReducer(
         if (item) {
           return {
             items: state.items.map(elem => (elem.id === item.id ? item : elem)),
-            loading
+            loading: false
           };
         }
       } else {
@@ -49,7 +49,7 @@ function ItemReducer(
         if (item) {
           return {
             items: state.items.filter(elem => elem.id !== item.id),
-            loading
+            loading: false
           };
         }
       }

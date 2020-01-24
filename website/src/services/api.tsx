@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
 const instanceItems = axios.create({
-  baseURL: '/items'
+  baseURL: 'http://localhost:3000'
 });
 
 const instanceAuth = axios.create({

@@ -14,15 +14,13 @@ export default function Home(): JSX.Element {
   // if (isLoading) {
   //   return <Spinner />;
   // }
-  const { loadUser, isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, loadUser, user } = useContext(AuthContext);
   const [css] = useStyletron();
 
-  useEffect(() => {
-    //getItems();
-    if (isAuthenticated) {
-      loadUser();
-    }
-  }, [isAuthenticated]);
+  console.log('Dashboard', { isAuthenticated });
+  // useEffect(() => {
+  //   loadUser();
+  // }, [isAuthenticated, user]);
   return (
     <Fragment>
       <Nav />

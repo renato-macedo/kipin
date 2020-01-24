@@ -24,7 +24,7 @@ export default function Menu(props: any) {
   function handleSelect({ item }: any) {
     if (item.option === 'Log Out') {
       logout();
-      //props.history.push('/login');
+      props.history.push('/login');
     }
   }
   return (

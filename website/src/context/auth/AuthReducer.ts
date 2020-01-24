@@ -8,7 +8,8 @@ import {
   REGISTER_FAIL,
   REGISTER_SUCCESS,
   SET_LOADING,
-  LOGOUT
+  LOGOUT,
+  CONFIRM_COOKIE
 } from '../types';
 
 const AuthReducer: any = (
@@ -32,6 +33,7 @@ const AuthReducer: any = (
       // console.log('USER LOADED');
       return {
         ...state,
+        isAuthenticated: true,
         user: action.payload,
         loading: false
       };
@@ -47,6 +49,12 @@ const AuthReducer: any = (
         error: action.payload
       };
 
+    case CONFIRM_COOKIE:
+      return {
+        ...state,
+        isAuthenticated: true,
+        loading: false
+      };
     case SET_LOADING:
       return {
         ...state,

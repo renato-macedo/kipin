@@ -13,6 +13,7 @@ export const REGISTER_FAIL = 'REGISTER_FAIL';
 export const USER_LOADED = 'USER_LOADED';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const CONFIRM_COOKIE = 'CONFIRM_COOKIE';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
@@ -52,6 +53,7 @@ export interface AuthContextInterface {
   clearErrors: () => void;
   loadUser: () => void;
   setLoading: (loading: boolean) => void;
+  refreshToken: () => void;
 }
 
 export interface AuthStateInterface {

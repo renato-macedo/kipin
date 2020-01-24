@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 import { Client as Styletron } from 'styletron-engine-atomic';
 import { Provider as StyletronProvider } from 'styletron-react';
 import { BaseProvider, createTheme } from 'baseui';
@@ -12,12 +12,25 @@ import { Home, Dashboard, Login, Signup, NotFound } from './pages';
 import Nav from './components/Nav';
 import PrivateRoute from './components/PrivateRoute';
 import theme from './theme';
+import AuthContext from './context/auth/AuthContext';
 
 const CustomTheme = createTheme(theme);
 CustomTheme;
 const engine = new Styletron();
 
 function App() {
+  const { refreshToken, isAuthenticated, loading } = useContext(AuthContext);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      async function espera() {
+        await refreshToken();
+      }
+      espera();
+    }
+  }, []);
+  if (loading) {
+    return <h3>Loading App...</h3>;
+  }
   return (
     <Router>
       <Switch>
