@@ -30,7 +30,6 @@ export default function Login(props: any) {
   }
 
   useEffect(() => {
-    console.log('login', { isAuthenticated });
     if (isAuthenticated) {
       props.history.push('/');
     }

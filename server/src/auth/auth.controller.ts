@@ -74,7 +74,6 @@ export class AuthController {
       .cookie('refresh_token', refresh_token, {
         httpOnly: true,
         maxAge: 120000,
-        sameSite: false,
       })
       .json({ token, expiresIn });
   }

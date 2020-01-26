@@ -1,13 +1,14 @@
+const HOMEPAGE = 'http://localhost:3000/';
 let URLs = [];
-chrome.storage.local.get(['URLs'], storage => {
-  if (storage.URLs) {
-    URLs = storage.URLs;
-  }
-});
 
 chrome.storage.sync.get(['token'], async ({ token }) => {
   if (token) {
     await syncURLs(token);
+    chrome.storage.local.get(['URLs'], storage => {
+      if (storage.URLs) {
+        URLs = storage.URLs;
+      }
+    });
   }
 });
 
@@ -17,33 +18,42 @@ chrome.storage.sync.get(['token'], async ({ token }) => {
 // });
 
 chrome.webNavigation.onCompleted.addListener(tab => {
-  console.log('ue');
-  console.log(tab);
+  //console.log(tab);
   const { tabId, url } = tab;
   if (URLs.includes(url)) {
-    console.log({ tabId });
+    console.log('navigation');
     updateIcon(tabId, true);
-  } else {
-    console.log(url, 'nao pertence a', URLs);
   }
 
-  if (url === 'http://localhost:3000/extension') {
+  if (url === HOMEPAGE) {
     chrome.runtime.onMessage.addListener(
       async (request, sender, sendResponse) => {
-        // if (request.greeting == 'hello') sendResponse({ farewell: 'goodbye' });
-        const { access_token } = request;
+        console.log('request', request);
+        const { token } = request;
 
         // if the message is to save the token
-        if (access_token) {
-          chrome.storage.sync.set({ token: access_token }, () => {
+        if (token) {
+          chrome.storage.sync.set({ token }, () => {
             console.log('token set');
           });
 
           // the user is authenticated lets update the URLs set
-          await syncURLs(access_token);
+          await syncURLs(token);
         }
       }
     );
+  }
+});
+
+chrome.history.onVisited.addListener(result => {
+  console.log('ok');
+  const { url } = result;
+  if (URLs.includes(url)) {
+    console.log('inclui');
+    updateIcon(undefined, true);
+  } else {
+    console.log(url, 'nao pertence a', URLs);
+    updateIcon(undefined, false);
   }
 });
 
@@ -54,32 +64,29 @@ chrome.browserAction.onClicked.addListener(tab => {
     // if there is no token it means the user is not logged in
     if (!token) {
       // so we go to extension page to get the token
-      chrome.tabs.create({ url: 'http://localhost:3000/extension' });
+      chrome.tabs.create({ url: HOMEPAGE });
     } else {
       console.log(tab);
       // if the user is authenticated
       const { title, url, id } = tab;
-      console.log({ title, url, id });
-      console.log({ URLs });
 
       if (URLs.includes(url)) {
         updateIcon(id, true);
       } else {
         console.log('pagina nao esta salva');
-        try {
-          const data = await service({
-            url: 'http://localhost:3000/items',
-            method: 'POST',
-            data: { body: url, title },
-            token
-          });
-          console.log('depois de salvar', data);
-          // add the new URL to the set
-          //URLs.push(data.body);
+
+        const data = await service({
+          url: 'http://localhost:3000/items',
+          method: 'POST',
+          data: { body: url, title },
+          token
+        });
+
+        if (data.statusCode !== 400 && data.statusCode !== 401) {
           updateIcon(id, true);
           await syncURLs(token);
-        } catch (error) {
-          console.log('erro ao salvar a pagina', error);
+        } else {
+          console.log('erro ao salvar URL');
         }
       }
     }
@@ -87,25 +94,36 @@ chrome.browserAction.onClicked.addListener(tab => {
 });
 
 async function syncURLs(token) {
-  const data = await service({
-    url: 'http://localhost:3000/items',
-    method: 'GET',
-    token
-  });
-  console.log(data);
-  const newURLs = data.map(({ body }) => body);
+  try {
+    const data = await service({
+      url: 'http://localhost:3000/items',
+      method: 'GET',
+      token
+    });
+    console.log(data);
+    const newURLs = data.map(({ body }) => body);
 
-  chrome.storage.local.set({ URLs: newURLs }, () => {
-    console.log('URLs updated');
-    URLs = newURLs;
-  });
+    chrome.storage.local.set({ URLs: newURLs }, () => {
+      console.log('URLs updated');
+      URLs = newURLs;
+    });
+  } catch (error) {
+    console.log('erro ao sincronizar');
+    chrome.storage.local.set({ URLs: [] }, () => {
+      console.log('URLs updated');
+      URLs = [];
+    });
+  }
+}
 
-  // URLs = [...URLs, ...newURLs].reduce((acc, value) => {
-  //   if (!acc.includes(value)) {
-  //     acc.push(value);
-  //   }
-  //   return acc;
-  // }, []);
+function updateIcon(tabId, saved) {
+  const path = saved === true ? 'icon.png' : 'icon_2.png';
+  chrome.browserAction.setIcon({ path, tabId }, () => {
+    chrome.browserAction.setTitle({
+      title: 'This page is already save',
+      tabId
+    });
+  });
 }
 
 // this is a helper for the fetch function
@@ -129,20 +147,16 @@ async function service({ url, method, data, token }) {
 
   try {
     const response = await fetch(url, requestConfig);
-    return response.json();
+    const data = await response.json();
+    console.log(data);
+    if (data.statusCode === 401) {
+      chrome.storage.sync.set({ token: '' });
+    }
+    return data;
   } catch (error) {
+    console;
+    console.log('erro no service');
     console.log(error);
     return null;
   }
-}
-
-function updateIcon(tabId, saved) {
-  const path = saved === true ? 'icon.png' : 'icon_2.png';
-  console.log({ path });
-  chrome.browserAction.setIcon({ path, tabId }, () => {
-    chrome.browserAction.setTitle({
-      title: 'This page is already save',
-      tabId
-    });
-  });
 }

@@ -17,7 +17,6 @@ export default function Home(): JSX.Element {
   const { isAuthenticated, loadUser, user } = useContext(AuthContext);
   const [css] = useStyletron();
 
-  console.log('Dashboard', { isAuthenticated });
   // useEffect(() => {
   //   loadUser();
   // }, [isAuthenticated, user]);

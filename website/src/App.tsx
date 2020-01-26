@@ -19,11 +19,14 @@ CustomTheme;
 const engine = new Styletron();
 
 function App() {
-  const { refreshToken, isAuthenticated, loading } = useContext(AuthContext);
+  const { refreshToken, isAuthenticated, loading, loadUser } = useContext(
+    AuthContext
+  );
   useEffect(() => {
     if (!isAuthenticated) {
       async function espera() {
         await refreshToken();
+        await loadUser();
       }
       espera();
     }

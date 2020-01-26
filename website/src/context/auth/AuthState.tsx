@@ -54,7 +54,7 @@ function AuthState(props: any): any {
         type: LOGIN_SUCCESS,
         payload: response.data.token
       });
-
+      tellExtensionItsAuthenticated(response.data);
       loadUser();
     } catch (error) {
       dispatch({
@@ -100,6 +100,9 @@ function AuthState(props: any): any {
       );
       // console.log(response.data);
       setAuthToken(response.data.token);
+      accessToken = response.data.token;
+      //tellExtensionItsAuthenticated(response.data);
+
       dispatch({
         type: CONFIRM_COOKIE,
         payload: null
@@ -110,37 +113,24 @@ function AuthState(props: any): any {
         type: AUTH_ERROR,
         payload: error.response.data.error
       });
-      console.log(error.response.data);
+
       //return [false, error.response.error];
     }
+    // document.removeEventListener('listening', e => {
+    //   if (accessToken) {
+    //     tellExtensionItsAuthenticated({ token: accessToken });
+    //   }
+    // });
   }
 
-  // async function loadUser() {
-  //   try {
-  //     const [success, tokenOrError] = await refreshToken();
-
-  //     if (success) {
-  //       setAuthToken(tokenOrError);
-  //       const response = await axios.get('http://localhost:3000/auth/user');
-  //       dispatch({
-  //         type: USER_LOADED,
-  //         payload: response.data
-  //       });
-  //     } else {
-  //       dispatch({
-  //         type: AUTH_ERROR,
-  //         payload: tokenOrError
-  //       });
-  //     }
-  //   } catch (error) {
-  //     dispatch({
-  //       type: AUTH_ERROR,
-  //       payload: error.response.data.message
-  //     });
-  //   }
-  // }
-
   async function loadUser() {
+    document.addEventListener('listening', e => {
+      console.log('listening event fired');
+      console.log('token', accessToken);
+      if (accessToken) {
+        tellExtensionItsAuthenticated({ token: accessToken });
+      }
+    });
     try {
       const response = await axios.get('http://localhost:3000/auth/user');
       dispatch({
@@ -171,7 +161,6 @@ function AuthState(props: any): any {
         type: LOGOUT,
         payload: null
       });
-      console.log(response.data);
     } catch (error) {
       dispatch({
         type: AUTH_ERROR,
@@ -199,6 +188,12 @@ function AuthState(props: any): any {
       {props.children}
     </AuthContext.Provider>
   );
+}
+
+function tellExtensionItsAuthenticated(data: any) {
+  const LoginEvent = new CustomEvent('login', { detail: { data } });
+  document.dispatchEvent(LoginEvent);
+  console.log('dispatch login event', LoginEvent);
 }
 
 export default AuthState;

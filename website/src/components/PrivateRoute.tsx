@@ -4,7 +4,7 @@ import AuthContext from '../context/auth/AuthContext';
 
 export default function PrivateRoute({ component: Component, ...rest }: any) {
   const { isAuthenticated } = useContext(AuthContext);
-  console.log('rota', { isAuthenticated });
+
   return (
     <Route
       {...rest}

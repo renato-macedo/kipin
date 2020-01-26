@@ -9,7 +9,7 @@ export class ItemService {
 
   async index(userid) {
     console.log({ userid });
-    const items = await this.itemModel.find({ user: userid }).exec();
+    const items = await this.itemModel.find({ user: userid }).sort('-createdAt').exec();
 
     return items.map(item => ({
       id: item.id,
