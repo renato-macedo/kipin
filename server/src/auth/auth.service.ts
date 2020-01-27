@@ -39,7 +39,7 @@ export class AuthService {
     return this.jwtService.signAsync(
       { sub: userId },
       {
-        expiresIn: '3min',
+        expiresIn: '1h',
       },
     );
   }

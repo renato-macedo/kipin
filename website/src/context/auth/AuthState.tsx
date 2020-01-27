@@ -126,7 +126,6 @@ function AuthState(props: any): any {
   async function loadUser() {
     document.addEventListener('listening', e => {
       console.log('listening event fired');
-      console.log('token', accessToken);
       if (accessToken) {
         tellExtensionItsAuthenticated({ token: accessToken });
       }
@@ -193,7 +192,7 @@ function AuthState(props: any): any {
 function tellExtensionItsAuthenticated(data: any) {
   const LoginEvent = new CustomEvent('login', { detail: { data } });
   document.dispatchEvent(LoginEvent);
-  console.log('dispatch login event', LoginEvent);
+  console.log('dispatch login event');
 }
 
 export default AuthState;
