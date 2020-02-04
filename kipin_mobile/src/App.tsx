@@ -1,8 +1,12 @@
+import React from 'react';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import Login from './Login';
 import Signup from './Signup';
 import Main from './Main';
+import ItemState from './context/Items/ItemsState';
+import AuthState from './context/auth/AuthState';
 const Auth = createStackNavigator(
   {
     Login,
@@ -32,4 +36,15 @@ const Switch = createSwitchNavigator(
 //   },
 // );
 
-export default createAppContainer(Switch);
+const App = createAppContainer(Switch);
+export default function AppWithProvider() {
+  return (
+    <PaperProvider>
+      <AuthState>
+        <ItemState>
+          <App />
+        </ItemState>
+      </AuthState>
+    </PaperProvider>
+  );
+}
