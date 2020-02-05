@@ -55,11 +55,13 @@ function AuthState(props: any): any {
       });
 
       loadUser();
+      return true;
     } catch (error) {
       dispatch({
         type: LOGIN_FAIL,
         payload: error.response.data.message,
       });
+      return false;
     }
   }
   // Register User

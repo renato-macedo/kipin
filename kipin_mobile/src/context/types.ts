@@ -47,7 +47,7 @@ export interface AuthContextInterface {
   loading: boolean;
   user: User | null;
   error: string | null;
-  login: (formData: FormDataInterface) => void;
+  login: (formData: FormDataInterface) => boolean;
   register: (formData: FormDataInterface) => void;
   logout: () => void;
   clearErrors: () => void;

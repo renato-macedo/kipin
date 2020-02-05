@@ -36,7 +36,6 @@ function ItemState(props: any): any {
         payload: {items: response.data, loading: false},
       });
     } catch (error) {
-      console.log('aaaaaaaaaaaaaaaaaaaaaa', error.response);
       dispatch({
         type: ITEM_ERROR,
         payload: {error: error.response.data.error, loading: false},
