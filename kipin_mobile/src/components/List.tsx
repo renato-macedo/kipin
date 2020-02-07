@@ -1,13 +1,12 @@
 import React, {useContext, useEffect, useCallback, useState} from 'react';
 import {FlatList, RefreshControl, Text, StyleSheet} from 'react-native';
-import Item from './ListItem';
+import Item from './Item';
 import ItemsContext from '../context/Items/ItemsContext';
 
-const wait = (time: number) => new Promise(res => setTimeout(res, time));
-
+import {ItemInterface} from '../context/types';
 function ListItem() {
   const [refreshing, setRefreshing] = useState(false);
-  const {items, error, getItems} = useContext(ItemsContext);
+  const {items, error, getItems, loading} = useContext(ItemsContext);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -27,7 +26,10 @@ function ListItem() {
   if (error) {
     return <Text>{error}</Text>;
   }
-  if (items && items.length > 0) {
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+  if (!loading && items && items.length > 0) {
     return (
       <FlatList
         style={styles.list}
@@ -35,8 +37,8 @@ function ListItem() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         data={items}
-        renderItem={({item}) => <Item title={item.title} />}
-        keyExtractor={item => item.id}
+        renderItem={({item}) => <Item item={item} />}
+        keyExtractor={(item: ItemInterface) => item.id}
       />
     );
   }

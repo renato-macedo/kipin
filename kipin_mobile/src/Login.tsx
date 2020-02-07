@@ -1,24 +1,24 @@
 import React, {useState, useContext} from 'react';
-import {View, StyleSheet, KeyboardAvoidingView} from 'react-native';
+import {View, StyleSheet, KeyboardAvoidingView, Alert} from 'react-native';
 import {TextInput, Button, Title} from 'react-native-paper';
 import AuthContext from './context/auth/AuthContext';
 
 function Login(props: any) {
-  const {login, isAuthenticated} = useContext(AuthContext);
+  const {login, error} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   async function handleSubmit() {
     if (email && password) {
       const success = await login({email, password});
-      if (success) {
-        props.navigation.navigate('Main');
-      }
+      success
+        ? props.navigation.navigate('Main')
+        : Alert.alert('Invalid credentials', error);
+    } else {
+      Alert.alert('Invalid credentials', error);
     }
   }
-  // if (isAuthenticated) {
-  //   return props.navigation.navigate('Main');
-  // }
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height">
       <View style={styles.title_container}>
@@ -52,7 +52,7 @@ function Login(props: any) {
           onPress={() => props.navigation.navigate('Signup')}>
           Not Account Yet? Sign Up Now
         </Button>
-        <Button style={styles.signup_btn}>Forget Your Passoword?</Button>
+        <Button style={styles.signup_btn}>Forget Your Password?</Button>
       </View>
     </KeyboardAvoidingView>
   );

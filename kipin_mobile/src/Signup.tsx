@@ -6,7 +6,9 @@ function Signup(props: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  function handleSubmit() {}
+  function handleSubmit() {
+    console.log(email, password, name);
+  }
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height">
       <View style={styles.title_container}>

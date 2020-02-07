@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
@@ -7,6 +7,8 @@ import Signup from './Signup';
 import Main from './Main';
 import ItemState from './context/Items/ItemsState';
 import AuthState from './context/auth/AuthState';
+import AuthContext from './context/auth/AuthContext';
+import {Text} from 'react-native';
 
 const Auth = createStackNavigator(
   {
@@ -28,15 +30,6 @@ const Switch = createSwitchNavigator(
     initialRouteName: 'Auth',
   },
 );
-// const AppNavigator = createStackNavigator(
-//   {
-//     Home: HomeScreen,
-//     Details: Details,
-//   },
-//   {
-//     initialRouteName: 'Home',
-//   },
-// );
 
 const theme = {
   ...DefaultTheme,
@@ -49,12 +42,36 @@ const theme = {
 };
 
 const App = createAppContainer(Switch);
+
+function Router() {
+  const {loadUser, isAuthenticated, loading} = useContext(AuthContext);
+
+  async function load() {
+    console.log({isAuthenticated});
+    await loadUser();
+  }
+
+  useEffect(() => {
+    console.log('ok');
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (loading) {
+    return <Text> Loading</Text>;
+  }
+  if (isAuthenticated) {
+    return <Main />;
+  }
+  return <App />;
+}
+
 export default function AppWithProvider() {
   return (
     <PaperProvider theme={theme}>
       <AuthState>
         <ItemState>
-          <App />
+          <Router />
         </ItemState>
       </AuthState>
     </PaperProvider>

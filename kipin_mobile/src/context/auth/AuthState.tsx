@@ -1,12 +1,11 @@
-/* eslint-disable no-unused-vars */
 import React, {useReducer, Reducer} from 'react';
 import AuthContext from './AuthContext';
 import AuthReducer from './AuthReducer';
 import setAuthToken from '../../utils/setAuthToken';
+import {getData, storeData} from '../../utils/Storage';
 import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
-  USER_LOADED,
   AUTH_ERROR,
   Action,
   AuthStateInterface,
@@ -49,14 +48,15 @@ function AuthState(props: any): any {
 
       accessToken = response.data.token;
       setAuthToken(accessToken);
+      await storeData('credentials', JSON.stringify(formData));
       dispatch({
         type: LOGIN_SUCCESS,
         payload: response.data.token,
       });
 
-      loadUser();
       return true;
     } catch (error) {
+      console.log(error.response.data.message);
       dispatch({
         type: LOGIN_FAIL,
         payload: error.response.data.message,
@@ -80,7 +80,7 @@ function AuthState(props: any): any {
         payload: response.data.token,
       });
 
-      loadUser();
+      //loadUser();
     } catch (error) {
       let {message} = error.response.data;
       // console.log({ message });
@@ -102,40 +102,45 @@ function AuthState(props: any): any {
       // console.log(response.data);
       setAuthToken(response.data.token);
       accessToken = response.data.token;
-      //tellExtensionItsAuthenticated(response.data);
 
       dispatch({
         type: CONFIRM_COOKIE,
         payload: null,
       });
-      //return [true, response.data.token];
     } catch (error) {
       dispatch({
         type: AUTH_ERROR,
         payload: error.response.data.error,
       });
-
-      //return [false, error.response.error];
     }
-    // document.removeEventListener('listening', e => {
-    //   if (accessToken) {
-    //     tellExtensionItsAuthenticated({ token: accessToken });
-    //   }
-    // });
   }
+
+  // async function loadUser() {
+  //   try {
+  //     const response = await axios.get('http://192.168.25.230:3000/auth/user');
+  //     dispatch({
+  //       type: USER_LOADED,
+  //       payload: response.data,
+  //     });
+  //   } catch (error) {
+  //     dispatch({
+  //       type: AUTH_ERROR,
+  //       payload: error.response.data.message,
+  //     });
+  //   }
+  // }
 
   async function loadUser() {
     try {
-      const response = await axios.get('http://192.168.25.230:3000/auth/user');
-      dispatch({
-        type: USER_LOADED,
-        payload: response.data,
-      });
+      const credentials = await getData('credentials');
+      if (credentials) {
+        const {email, password} = JSON.parse(credentials);
+        const success = await login({email, password});
+        return success;
+      }
+      return false;
     } catch (error) {
-      dispatch({
-        type: AUTH_ERROR,
-        payload: error.response.data.message,
-      });
+      return false;
     }
   }
 

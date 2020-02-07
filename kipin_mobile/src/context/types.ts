@@ -51,7 +51,7 @@ export interface AuthContextInterface {
   register: (formData: FormDataInterface) => void;
   logout: () => void;
   clearErrors: () => void;
-  loadUser: () => void;
+  loadUser: () => Promise<boolean>;
   setLoading: (loading: boolean) => void;
   refreshToken: () => void;
 }
@@ -84,7 +84,7 @@ export interface ItemsContextInterface {
   items: Array<ItemInterface> | null;
   error?: string;
   loading: boolean;
-  getItems: () => void;
+  getItems: () => Promise<void>;
   addItem: (body: string) => void;
   deleteItem: (itemId: string) => void;
   updateItem: (item: ItemInterface) => void;

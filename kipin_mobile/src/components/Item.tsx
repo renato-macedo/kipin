@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import {List, TouchableRipple, Avatar} from 'react-native-paper';
+import {ItemInterface} from 'src/context/types';
+
 // import {Image} from 'react-native';
-export default function Item({title}: {title: string}) {
+export default function Item({item: {title, body}}: {item: ItemInterface}) {
   const [editing, setEditing] = useState(false);
   if (editing) {
     return (
@@ -10,7 +12,7 @@ export default function Item({title}: {title: string}) {
         rippleColor="rgba(0, 0, 0, .32)">
         <List.Item
           title={'Editing ' + title}
-          description="Item description"
+          description={body}
           left={props => <List.Icon {...props} icon="folder" />}
         />
       </TouchableRipple>
@@ -23,7 +25,7 @@ export default function Item({title}: {title: string}) {
       rippleColor="rgba(0, 0, 0, .32)">
       <List.Item
         title={title}
-        description="Item description"
+        description={body}
         left={() => (
           <List.Icon
             icon={() => (
