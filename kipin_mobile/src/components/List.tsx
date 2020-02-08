@@ -6,6 +6,7 @@ import ItemsContext from '../context/Items/ItemsContext';
 import {ItemInterface} from '../context/types';
 function ListItem() {
   const [refreshing, setRefreshing] = useState(false);
+
   const {items, error, getItems, loading} = useContext(ItemsContext);
 
   const onRefresh = useCallback(() => {

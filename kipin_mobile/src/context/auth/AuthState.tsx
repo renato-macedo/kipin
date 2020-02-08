@@ -39,6 +39,7 @@ function AuthState(props: any): any {
 
   // Login User
   async function login(formData: FormDataInterface) {
+    console.log('trying to login');
     try {
       const response = await axios.post(
         'http://192.168.25.230:3000/auth/login',
@@ -56,7 +57,7 @@ function AuthState(props: any): any {
 
       return true;
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log({error: error.response});
       dispatch({
         type: LOGIN_FAIL,
         payload: error.response.data.message,

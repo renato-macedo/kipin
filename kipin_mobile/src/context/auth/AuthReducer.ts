@@ -40,6 +40,7 @@ const AuthReducer: any = (
     case REGISTER_FAIL:
     case LOGIN_FAIL:
     case AUTH_ERROR:
+      console.log('teste');
       return {
         ...state,
         token: null,

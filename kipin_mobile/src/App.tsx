@@ -48,7 +48,8 @@ function Router() {
 
   async function load() {
     console.log({isAuthenticated});
-    await loadUser();
+    const success = await loadUser();
+    console.log({success});
   }
 
   useEffect(() => {
@@ -58,7 +59,7 @@ function Router() {
   }, []);
 
   if (loading) {
-    return <Text> Loading</Text>;
+    return <Text> Loading...</Text>;
   }
   if (isAuthenticated) {
     return <Main />;

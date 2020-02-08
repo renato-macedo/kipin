@@ -1,28 +1,21 @@
-import React, {useState} from 'react';
-import {List, TouchableRipple, Avatar} from 'react-native-paper';
+import React, {useState, useContext} from 'react';
+import {List, TouchableRipple, Avatar, Menu, Divider} from 'react-native-paper';
 import {ItemInterface} from 'src/context/types';
+import {View, Linking} from 'react-native';
+import ItemsContext from '../context/Items/ItemsContext';
 
 // import {Image} from 'react-native';
-export default function Item({item: {title, body}}: {item: ItemInterface}) {
-  const [editing, setEditing] = useState(false);
-  if (editing) {
-    return (
-      <TouchableRipple
-        onBlur={() => setEditing(false)}
-        rippleColor="rgba(0, 0, 0, .32)">
-        <List.Item
-          title={'Editing ' + title}
-          description={body}
-          left={props => <List.Icon {...props} icon="folder" />}
-        />
-      </TouchableRipple>
-    );
+export default function Item({item: {id, title, body}}: {item: ItemInterface}) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const {deleteItem} = useContext(ItemsContext);
+  function handleDelete() {
+    deleteItem(id);
+  }
+  function handleOpen() {
+    Linking.openURL(body).catch(err => console.error('An error occurred', err));
   }
   return (
-    <TouchableRipple
-      onLongPress={() => setEditing(true)}
-      onPress={() => console.log('Open')}
-      rippleColor="rgba(0, 0, 0, .32)">
+    <View>
       <List.Item
         title={title}
         description={body}
@@ -39,8 +32,31 @@ export default function Item({item: {title, body}}: {item: ItemInterface}) {
             )}
           />
         )}
-        right={props => <List.Icon {...props} icon="dots-vertical" />}
+        onPress={handleOpen}
+        // right={props => (
+        //   <TouchableRipple
+        //     //onLongPress={handleLongPress}
+        //     onPress={() => console.log('delete')}
+        //     rippleColor="rgba(0, 0, 0, .32)">
+        //     <List.Icon {...props} icon="dots-vertical" />
+        //   </TouchableRipple>
+        // )}
+        right={() => (
+          <Menu
+            visible={menuOpen}
+            onDismiss={() => setMenuOpen(false)}
+            anchor={
+              <TouchableRipple
+                onPress={() => setMenuOpen(true)}
+                rippleColor="rgba(0, 0, 0, .32)">
+                <List.Icon icon="dots-vertical" />
+              </TouchableRipple>
+            }>
+            <Menu.Item onPress={handleDelete} title="Delete" />
+          </Menu>
+        )}
       />
-    </TouchableRipple>
+      <Divider />
+    </View>
   );
 }
