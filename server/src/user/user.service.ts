@@ -55,4 +55,22 @@ export class UserService {
       .select('-password')
       .exec();
   }
+
+  async updatePassword(email: string, newPassword: string) {
+    try {
+      const user = await this.userModel.findOne({ email });
+
+      if (!user) {
+        // throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+        return false;
+      }
+
+      //console.log(data);
+      const hash = await bcrypt.hash(newPassword, 10);
+
+      await user.update({ password: hash }).exec();
+    } catch (error) {
+      return false;
+    }
+  }
 }

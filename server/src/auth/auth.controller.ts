@@ -7,6 +7,8 @@ import {
   Get,
   Req,
   BadRequestException,
+  Query,
+  HttpException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -15,6 +17,7 @@ import { CreateUserDto } from '../user/user.dto';
 import { differenceInSeconds, getTime, addDays, addMinutes } from 'date-fns';
 import { Response, Request } from 'express';
 import { UserService } from '../user/user.service';
+import { ResetDto } from './types';
 
 @Controller('auth')
 export class AuthController {
@@ -29,8 +32,8 @@ export class AuthController {
     //console.log(req.user);
     const { email, id } = req.user;
     const [token, refresh_token] = await Promise.all([
-      this.authService.generateAccessToken({ userEmail: email, userId: id }),
-      this.authService.generateRefreshToken(id),
+      this.authService.generateToken({ email, sub: id }, '1min'),
+      this.authService.generateToken({ sub: id }, '1h'),
     ]);
     const now = new Date();
     const inFifteenMinutes = addMinutes(now, 2);
@@ -57,11 +60,14 @@ export class AuthController {
     const user = await this.userService.create({ name, password, email });
     //console.log('iuiuiuiu');
     const [token, refresh_token] = await Promise.all([
-      this.authService.generateAccessToken({
-        userEmail: user.email,
-        userId: user.id,
-      }),
-      this.authService.generateRefreshToken(user.id),
+      this.authService.generateToken(
+        {
+          email: user.email,
+          sub: user.id,
+        },
+        '1min',
+      ),
+      this.authService.generateToken({ sub: user.id }, '1h'),
     ]);
 
     const now = new Date();
@@ -104,5 +110,32 @@ export class AuthController {
         .json({ message: 'Log Out successfully' });
     }
     throw new BadRequestException('No cookie');
+  }
+
+  @Get('reset')
+  renderResetView(@Query('token') token) {
+    // TODO: render view
+    this.authService.validateToken(token);
+  }
+
+  @Post('reset')
+  newPassword(@Body() body) {
+    const { new_password, email } = body;
+    const success = this.userService.updatePassword(email, new_password);
+    if (success) {
+      return { message: 'password updated' };
+    }
+
+    throw new BadRequestException('password could not be updated');
+  }
+  @Post('sendmail')
+  async sendEmail(@Body() data: ResetDto) {
+    const { email } = data;
+    const success = await this.authService.sendMail(email);
+    if (success) {
+      return { message: `email sento to ${email}` };
+    }
+
+    throw new HttpException('email was not sent', 500);
   }
 }

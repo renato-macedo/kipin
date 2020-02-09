@@ -7,6 +7,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { join } from 'path';
+import { EmailService } from './email/email.service';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -21,8 +23,9 @@ import { join } from 'path';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'website', 'dist'),
     }),
+    EmailModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EmailService],
 })
 export class AppModule {}
