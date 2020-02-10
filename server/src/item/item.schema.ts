@@ -12,6 +12,10 @@ export const ItemSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
+
+    previewTitle: String,
+    previewURL: String,
+    previewDescription: String,
   },
 
   {

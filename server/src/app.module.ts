@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { join } from 'path';
 import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
+import { ScrapeModule } from './scrape/scrape.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { EmailModule } from './email/email.module';
       rootPath: join(__dirname, '..', '..', 'website', 'dist'),
     }),
     EmailModule,
+    ScrapeModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailService],
