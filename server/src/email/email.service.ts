@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { createTransport, Transporter } from 'nodemailer';
+import { createTransport, Transporter, createTestAccount } from 'nodemailer';
 import { emailConstants } from '../config/constants';
 
 @Injectable()
 export class EmailService {
-  private readonly transporter: Transporter;
+  private transporter: Transporter;
+
   constructor() {
+    console.log(emailConstants.user, emailConstants.port);
     this.transporter = createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
+      host: emailConstants.host,
+      port: emailConstants.port,
       auth: {
         user: emailConstants.user,
         pass: emailConstants.password,

@@ -31,7 +31,6 @@ export class AuthService {
         return this.userService.sanitizeUser(user);
       }
       return null;
-      // throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
     return null;
   }
@@ -41,21 +40,6 @@ export class AuthService {
       expiresIn,
     });
   }
-  // generateAccessToken({ userEmail, userId }) {
-  //   const payload = { email: userEmail, sub: userId };
-  //   return this.jwtService.signAsync(payload, {
-  //     expiresIn: '1min',
-  //   });
-  // }
-
-  // generateRefreshToken(userId) {
-  //   return this.jwtService.signAsync(
-  //     { sub: userId },
-  //     {
-  //       expiresIn: '1h',
-  //     },
-  //   );
-  // }
 
   async loadUser(userId) {
     const user = await this.userService.loadUser(userId);
@@ -64,22 +48,36 @@ export class AuthService {
 
   async sendMail(email: string) {
     try {
-      const token = await this.generateToken({ email }, '10m');
-      const resetLink = `${HOST}/reset?token=${token}`;
-      await this.emailService.sendResetPasswordEmail(email, resetLink);
-      return true;
+      const user = await this.userService.findOne(email);
+
+      if (user) {
+        const token = await this.generateToken({ email }, '1h');
+        const resetLink = `${HOST}/auth/reset?token=${token}`;
+        await this.emailService.sendResetPasswordEmail(email, resetLink);
+        return { success: true, message: null, status: HttpStatus.CREATED };
+      }
+      return {
+        success: false,
+        message: 'user does not exist',
+        status: HttpStatus.BAD_REQUEST,
+      };
     } catch (error) {
-      console.log('error sending mail', error);
-      return false;
+      console.log('error sending mail', error.message);
+      return {
+        success: false,
+        message: 'email was not sent',
+        status: HttpStatus.SERVICE_UNAVAILABLE,
+      };
     }
   }
 
-  validateToken(token) {
+  validateToken(token): [boolean, any] {
     try {
       const decoded = this.jwtService.verify(token);
-      return true;
+      //console.log({ decoded });
+      return [true, decoded];
     } catch (error) {
-      return false;
+      return [false, null];
     }
   }
 }

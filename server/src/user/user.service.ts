@@ -68,7 +68,7 @@ export class UserService {
       //console.log(data);
       const hash = await bcrypt.hash(newPassword, 10);
 
-      await user.update({ password: hash }).exec();
+      await user.updateOne({ password: hash }).exec();
     } catch (error) {
       return false;
     }

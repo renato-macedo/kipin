@@ -11,7 +11,6 @@ export class AppController {
   // }
 
   @Get('extension')
-  @Render('login')
   root() {
     return { message: 'Hello' };
   }

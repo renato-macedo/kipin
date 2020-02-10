@@ -5,9 +5,15 @@ import { BaseProvider, createTheme } from 'baseui';
 import AuthState from './context/auth/AuthState';
 import ItemState from './context/items/ItemState';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import { FlexGrid, FlexGridItem } from 'baseui/flex-grid';
 
-import { Home, Dashboard, Login, Signup, NotFound } from './pages';
+import {
+  Home,
+  Dashboard,
+  Login,
+  Signup,
+  NotFound,
+  ResetPassword
+} from './pages';
 
 import Nav from './components/Nav';
 import PrivateRoute from './components/PrivateRoute';
@@ -24,11 +30,11 @@ function App() {
   );
   useEffect(() => {
     if (!isAuthenticated) {
-      async function espera() {
+      async function load() {
         await refreshToken();
         await loadUser();
       }
-      espera();
+      load();
     }
   }, []);
   if (loading) {
@@ -41,7 +47,7 @@ function App() {
         <Route exact path="/login" component={Login} />
         {/* <Route exact path="/" component={Dashboard} /> */}
         <PrivateRoute exact path="/" component={Dashboard} />
-
+        <Route exact path="/reset" component={ResetPassword} />
         <Route component={NotFound} />
       </Switch>
     </Router>

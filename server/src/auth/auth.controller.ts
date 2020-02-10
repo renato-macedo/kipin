@@ -8,6 +8,7 @@ import {
   Req,
   BadRequestException,
   Query,
+  Render,
   HttpException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -112,18 +113,46 @@ export class AuthController {
     throw new BadRequestException('No cookie');
   }
 
-  @Get('reset')
-  renderResetView(@Query('token') token) {
-    // TODO: render view
-    this.authService.validateToken(token);
-  }
+  @Post('token')
+  validateToken(@Body() body) {
+    const { token } = body;
+    if (token) {
+      const [valid, decoded] = this.authService.validateToken(body.token);
+      if (valid) {
+        return { email: decoded.email };
+      }
+    }
 
-  @Post('reset')
+    throw new BadRequestException('invalid token');
+  }
+  // @Get('reset')
+  // renderResetView(@Query('token') token, @Res() res: Response) {
+  //   if (token) {
+  //     const [valid, decoded] = this.authService.validateToken(token);
+
+  //     if (valid) {
+  //       return res.render('reset_password', {
+  //         validToken: true,
+  //         email: decoded.email,
+  //       });
+  //     }
+  //   }
+
+  //   return res.render('reset_password', {
+  //     validToken: false,
+  //   });
+  // }
+
+  @Post('/reset')
   newPassword(@Body() body) {
-    const { new_password, email } = body;
-    const success = this.userService.updatePassword(email, new_password);
-    if (success) {
-      return { message: 'password updated' };
+    const { password, email, confirm_password } = body;
+    if (email && password && confirm_password) {
+      if (password === confirm_password) {
+        const success = this.userService.updatePassword(email, password);
+        if (success) {
+          return { success: true, message: 'password updated' };
+        }
+      }
     }
 
     throw new BadRequestException('password could not be updated');
@@ -131,11 +160,11 @@ export class AuthController {
   @Post('sendmail')
   async sendEmail(@Body() data: ResetDto) {
     const { email } = data;
-    const success = await this.authService.sendMail(email);
+    const { success, message, status } = await this.authService.sendMail(email);
     if (success) {
-      return { message: `email sento to ${email}` };
+      return { message: `email sent to ${email}` };
     }
 
-    throw new HttpException('email was not sent', 500);
+    throw new HttpException(message, status);
   }
 }
