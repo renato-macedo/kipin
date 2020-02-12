@@ -2,7 +2,7 @@ import React, {useReducer, Reducer} from 'react';
 import AuthContext from './AuthContext';
 import AuthReducer from './AuthReducer';
 import setAuthToken from '../../utils/setAuthToken';
-import {getData, storeData} from '../../utils/Storage';
+import {getData, storeData, removeItem} from '../../utils/Storage';
 
 import {
   LOGIN_FAIL,
@@ -133,16 +133,17 @@ function AuthState(props: any): any {
   // }
 
   async function loadUser() {
-    try {
-      const credentials = await getData('credentials');
-      if (credentials) {
-        const {email, password} = JSON.parse(credentials);
-        const success = await login({email, password});
-        return success;
-      }
-      return false;
-    } catch (error) {
-      return false;
+    const credentials = await getData('credentials');
+    console.log({credentials});
+    if (credentials) {
+      const {email, password} = JSON.parse(credentials);
+
+      await login({email, password});
+    } else {
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: 'User is not authenticated',
+      });
     }
   }
 
@@ -156,18 +157,11 @@ function AuthState(props: any): any {
   }
 
   async function logout() {
-    try {
-      await axios.get('http://192.168.25.230:3000/auth/logout');
-      dispatch({
-        type: LOGOUT,
-        payload: null,
-      });
-    } catch (error) {
-      dispatch({
-        type: AUTH_ERROR,
-        payload: 'Something went wrong',
-      });
-    }
+    await removeItem('credentials');
+    dispatch({
+      type: LOGOUT,
+      payload: null,
+    });
   }
   return (
     <AuthContext.Provider

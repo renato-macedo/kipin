@@ -1,13 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {Appbar, Menu} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
+import AuthContext from '../context/auth/AuthContext';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const {logout} = useContext(AuthContext);
   const _handleSearch = () => console.log('Searching');
   function handlePress() {
-    console.log('logout');
     setMenuOpen(false);
+    logout();
   }
   return (
     <View>

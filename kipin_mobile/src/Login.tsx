@@ -10,10 +10,7 @@ function Login(props: any) {
 
   async function handleSubmit() {
     if (email && password) {
-      const success = await login({email, password});
-      success
-        ? props.navigation.navigate('Main')
-        : Alert.alert('Invalid credentials', error);
+      await login({email, password});
     } else {
       Alert.alert('Invalid credentials', error);
     }

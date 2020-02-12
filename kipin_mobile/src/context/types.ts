@@ -51,7 +51,7 @@ export interface AuthContextInterface {
   register: (formData: FormDataInterface) => void;
   logout: () => void;
   clearErrors: () => void;
-  loadUser: () => Promise<boolean>;
+  loadUser: () => void;
   setLoading: (loading: boolean) => void;
   refreshToken: () => void;
 }

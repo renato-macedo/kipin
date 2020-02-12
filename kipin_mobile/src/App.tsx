@@ -2,6 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import {
   DefaultTheme,
   Provider as PaperProvider,
+  ActivityIndicator,
   // IconButton,
 } from 'react-native-paper';
 
@@ -14,7 +15,7 @@ import Home from './Home';
 import ItemState from './context/Items/ItemsState';
 import AuthState from './context/auth/AuthState';
 import AuthContext from './context/auth/AuthContext';
-import {Text} from 'react-native';
+import {Text, View} from 'react-native';
 
 // import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Header from './components/Header';
@@ -22,13 +23,22 @@ import Header from './components/Header';
 const AuthStack = createStackNavigator();
 function Auth() {
   return (
-    <AuthStack.Navigator initialRouteName="Login" headerMode="none">
+    <AuthStack.Navigator
+      mode="modal"
+      initialRouteName="Login"
+      headerMode="none">
       <AuthStack.Screen name="Login" component={Login} />
       <AuthStack.Screen name="Signup" component={Signup} />
     </AuthStack.Navigator>
   );
 }
 
+const Main = () => (
+  <View>
+    <Header />
+    <Home />
+  </View>
+);
 // const MainTabs = createMaterialBottomTabNavigator();
 // function Main() {
 //   return (
@@ -59,9 +69,7 @@ function App() {
   const {loading, isAuthenticated, loadUser} = useContext(AuthContext);
 
   async function load() {
-    console.log({isAuthenticated});
-    const success = await loadUser();
-    console.log({success});
+    await loadUser();
   }
 
   useEffect(() => {
@@ -75,10 +83,10 @@ function App() {
         // We haven't finished checking for the token yet
         <AppStack.Screen
           name="Loading"
-          component={() => <Text>Loading ...</Text>}
+          component={() => <ActivityIndicator />}
         />
       ) : isAuthenticated ? (
-        <AppStack.Screen name="Main" component={Home} />
+        <AppStack.Screen name="Main" component={Main} />
       ) : (
         <AppStack.Screen name="Auth" component={Auth} />
       )}
@@ -101,7 +109,6 @@ export default function AppWithProvider() {
       <AuthState>
         <ItemState>
           <NavigationContainer>
-            <Header />
             <App />
           </NavigationContainer>
         </ItemState>

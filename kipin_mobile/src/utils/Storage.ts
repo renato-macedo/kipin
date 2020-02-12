@@ -24,3 +24,11 @@ export async function getData(key: string): Promise<string> {
     return '';
   }
 }
+export async function removeItem(key: string) {
+  try {
+    await AsyncStorage.removeItem(key);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
