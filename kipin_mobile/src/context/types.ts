@@ -42,7 +42,7 @@ export interface FormDataInterface {
 }
 
 export interface AuthContextInterface {
-  // token: string | null;
+  token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   user: User | null;

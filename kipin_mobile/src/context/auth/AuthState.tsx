@@ -3,6 +3,7 @@ import AuthContext from './AuthContext';
 import AuthReducer from './AuthReducer';
 import setAuthToken from '../../utils/setAuthToken';
 import {getData, storeData} from '../../utils/Storage';
+
 import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
@@ -25,7 +26,7 @@ let accessToken: string;
 
 function AuthState(props: any): any {
   const initialState: AuthStateInterface = {
-    token: accessToken,
+    token: '',
     isAuthenticated: false,
     loading: true,
     user: null,

@@ -1,5 +1,11 @@
 import React, {useContext, useEffect, useCallback, useState} from 'react';
-import {FlatList, RefreshControl, Text, StyleSheet} from 'react-native';
+import {
+  FlatList,
+  RefreshControl,
+  Text,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import Item from './Item';
 import ItemsContext from '../context/Items/ItemsContext';
 
@@ -13,7 +19,7 @@ function ListItem() {
     setRefreshing(true);
 
     //wait(2000).then(() => setRefreshing(false));
-    console.log('asa asa');
+
     getItems().then(() => setRefreshing(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshing]);
@@ -44,7 +50,15 @@ function ListItem() {
     );
   }
 
-  return <Text>No Items</Text>;
+  return (
+    <ScrollView
+      style={styles.scrollView}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
+      <Text>No items</Text>
+    </ScrollView>
+  );
 }
 const styles = StyleSheet.create({
   list: {
@@ -52,6 +66,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 42,
+  },
+  scrollView: {
+    height: '90%',
   },
 });
 
