@@ -8,11 +8,11 @@ export class ScrapeService {
     const response = await axios.get(URL);
     const $ = cheerio.load(response.data);
     //console.log(response.data);
-    const imageURL = this.searchAttribute($, 'image');
-    const description = this.searchAttribute($, 'description');
-    const title = this.searchAttribute($, 'title');
+    const previewURL = this.searchAttribute($, 'image');
+    const previewDescription = this.searchAttribute($, 'description');
+    const previewTitle = this.searchAttribute($, 'title');
 
-    return { title, description, imageURL };
+    return { previewTitle, previewDescription, previewURL };
   }
 
   searchAttribute($: CheerioStatic, attribute: string) {
@@ -31,8 +31,8 @@ export class ScrapeService {
   //   console.log({ URL });
   // }
 
-  async downloadImage(imageURL: string) {
-    const { data } = await axios.get(imageURL);
-    console.log(data);
-  }
+  // async downloadImage(imageURL: string) {
+  //   const { data } = await axios.get(imageURL);
+  //   console.log(data);
+  // }
 }

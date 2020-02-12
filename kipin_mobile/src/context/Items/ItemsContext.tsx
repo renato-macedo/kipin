@@ -4,7 +4,7 @@ import {ItemsContextInterface} from '../types';
 const ItemsContext = createContext<ItemsContextInterface>({
   loading: true,
   items: null,
-  getItems: () => {},
+  getItems: async () => {},
   addItem: () => {},
   deleteItem: () => {},
   updateItem: () => {},

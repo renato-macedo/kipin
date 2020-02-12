@@ -2,19 +2,28 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Item } from './item.interface';
+import { ScrapeService } from '../scrape/scrape.service';
 
 @Injectable()
 export class ItemService {
-  constructor(@InjectModel('Item') private readonly itemModel: Model<Item>) {}
+  constructor(
+    @InjectModel('Item') private readonly itemModel: Model<Item>,
+    private readonly scrapeService: ScrapeService,
+  ) {}
 
   async index(userid) {
     console.log({ userid });
-    const items = await this.itemModel.find({ user: userid }).sort('-createdAt').exec();
+    const items = await this.itemModel
+      .find({ user: userid })
+      .sort('-createdAt')
+      .exec();
 
     return items.map(item => ({
       id: item.id,
       body: item.body,
       title: item.title,
+      image: item.previewURL,
+      description: item.previewDescription,
     }));
   }
 
@@ -23,13 +32,22 @@ export class ItemService {
     console.log(user);
     let item = await this.itemModel.findOne({ body });
     if (!item) {
-      item = await new this.itemModel({ user, body, title }).save();
+      const previewData = await this.scrapeService.getImagePreview(body);
+
+      item = await new this.itemModel({
+        user,
+        body,
+        title,
+        ...previewData,
+      }).save();
     }
 
     return {
       id: item.id,
       body: item.body,
-      title: item.title,
+      title: item.previewTitle,
+      image: item.previewURL,
+      description: item.previewDescription,
     };
   }
 

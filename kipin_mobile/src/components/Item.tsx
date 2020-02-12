@@ -5,7 +5,11 @@ import {View, Linking} from 'react-native';
 import ItemsContext from '../context/Items/ItemsContext';
 
 // import {Image} from 'react-native';
-export default function Item({item: {id, title, body}}: {item: ItemInterface}) {
+export default function Item({
+  item: {id, title, body, image, description},
+}: {
+  item: ItemInterface;
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const {deleteItem} = useContext(ItemsContext);
   function handleDelete() {
@@ -18,29 +22,20 @@ export default function Item({item: {id, title, body}}: {item: ItemInterface}) {
     <View>
       <List.Item
         title={title}
-        description={body}
+        description={description ? description : body}
         left={() => (
           <List.Icon
             icon={() => (
               <Avatar.Image
                 size={48}
                 source={{
-                  uri:
-                    'https://pbs.twimg.com/profile_images/1218784668713213953/1oietDB1_400x400.jpg',
+                  uri: image,
                 }}
               />
             )}
           />
         )}
         onPress={handleOpen}
-        // right={props => (
-        //   <TouchableRipple
-        //     //onLongPress={handleLongPress}
-        //     onPress={() => console.log('delete')}
-        //     rippleColor="rgba(0, 0, 0, .32)">
-        //     <List.Icon {...props} icon="dots-vertical" />
-        //   </TouchableRipple>
-        // )}
         right={() => (
           <Menu
             visible={menuOpen}

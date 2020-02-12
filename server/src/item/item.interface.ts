@@ -5,4 +5,7 @@ export interface Item extends Document {
   title: string;
   body: string;
   user: User;
+  previewTitle: string;
+  previewURL: string;
+  previewDescription: string;
 }
