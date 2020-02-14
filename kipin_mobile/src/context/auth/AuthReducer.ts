@@ -9,7 +9,8 @@ import {
   REGISTER_SUCCESS,
   SET_LOADING,
   LOGOUT,
-  CONFIRM_COOKIE,
+  RESTORE_SESSION_ERROR,
+  CLEAR_ERRORS,
 } from '../types';
 
 const AuthReducer: any = (
@@ -17,6 +18,7 @@ const AuthReducer: any = (
   state: AuthStateInterface,
   action: Action,
 ) => {
+  console.log(action.type, 'payload:', action.payload);
   switch (action.type) {
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
@@ -49,11 +51,13 @@ const AuthReducer: any = (
         error: action.payload,
       };
 
-    case CONFIRM_COOKIE:
+    case RESTORE_SESSION_ERROR:
       return {
         ...state,
-        isAuthenticated: true,
+        token: null,
+        isAuthenticated: false,
         loading: false,
+        error: null,
       };
     case SET_LOADING:
       return {
@@ -66,9 +70,13 @@ const AuthReducer: any = (
         user: null,
         isAuthenticated: false,
         loading: false,
-        error: null,
       };
     }
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
     default:
       return state;
   }

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   DefaultTheme,
   Provider as PaperProvider,
@@ -15,7 +15,7 @@ import Home from './Home';
 import ItemState from './context/Items/ItemsState';
 import AuthState from './context/auth/AuthState';
 import AuthContext from './context/auth/AuthContext';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 
 // import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Header from './components/Header';
@@ -66,10 +66,12 @@ const Main = () => (
 // }
 const AppStack = createStackNavigator();
 function App() {
-  const {loading, isAuthenticated, loadUser} = useContext(AuthContext);
-
+  const {isAuthenticated, loadUser} = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   async function load() {
+    setLoading(true);
     await loadUser();
+    setLoading(false);
   }
 
   useEffect(() => {

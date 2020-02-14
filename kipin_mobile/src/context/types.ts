@@ -18,6 +18,7 @@ export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const SET_LOADING = 'SET_LOADING';
+export const RESTORE_SESSION_ERROR = 'RESTORE_SESSION_ERROR';
 
 export interface ItemProps {
   key: any;
@@ -47,8 +48,8 @@ export interface AuthContextInterface {
   loading: boolean;
   user: User | null;
   error: string | null;
-  login: (formData: FormDataInterface) => boolean;
-  register: (formData: FormDataInterface) => void;
+  login: (formData: FormDataInterface) => Promise<boolean>;
+  register: (formData: FormDataInterface) => Promise<boolean>;
   logout: () => void;
   clearErrors: () => void;
   loadUser: () => void;

@@ -7,7 +7,6 @@ import {getData, storeData, removeItem} from '../../utils/Storage';
 import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
-  AUTH_ERROR,
   Action,
   AuthStateInterface,
   FormDataInterface,
@@ -15,7 +14,8 @@ import {
   REGISTER_FAIL,
   SET_LOADING,
   LOGOUT,
-  CONFIRM_COOKIE,
+  RESTORE_SESSION_ERROR,
+  CLEAR_ERRORS,
 } from '../types';
 
 import axios from 'axios';
@@ -30,6 +30,7 @@ function AuthState(props: any): any {
     isAuthenticated: false,
     loading: true,
     user: null,
+
     error: null,
   };
 
@@ -58,7 +59,7 @@ function AuthState(props: any): any {
 
       return true;
     } catch (error) {
-      console.log({error: error.response});
+      console.log({error: error.response.data});
       dispatch({
         type: LOGIN_FAIL,
         payload: error.response.data.message,
@@ -75,6 +76,7 @@ function AuthState(props: any): any {
       );
       // // console.log(response.headers);
 
+      await storeData('credentials', JSON.stringify(formData));
       accessToken = response.data.token;
       setAuthToken(accessToken);
       dispatch({
@@ -82,7 +84,7 @@ function AuthState(props: any): any {
         payload: response.data.token,
       });
 
-      //loadUser();
+      return true;
     } catch (error) {
       let {message} = error.response.data;
       // console.log({ message });
@@ -93,41 +95,27 @@ function AuthState(props: any): any {
         type: REGISTER_FAIL,
         payload: message,
       });
+      return false;
     }
   }
 
-  async function refreshToken(): Promise<void> {
-    try {
-      const response = await axios.get(
-        'http://192.168.25.230:3000/auth/refresh_token',
-      );
-      // console.log(response.data);
-      setAuthToken(response.data.token);
-      accessToken = response.data.token;
-
-      dispatch({
-        type: CONFIRM_COOKIE,
-        payload: null,
-      });
-    } catch (error) {
-      dispatch({
-        type: AUTH_ERROR,
-        payload: error.response.data.error,
-      });
-    }
-  }
-
-  // async function loadUser() {
+  // async function refreshToken(): Promise<void> {
   //   try {
-  //     const response = await axios.get('http://192.168.25.230:3000/auth/user');
+  //     const response = await axios.get(
+  //       'http://192.168.25.230:3000/auth/refresh_token',
+  //     );
+  //     // console.log(response.data);
+  //     setAuthToken(response.data.token);
+  //     accessToken = response.data.token;
+
   //     dispatch({
-  //       type: USER_LOADED,
-  //       payload: response.data,
+  //       type: CONFIRM_COOKIE,
+  //       payload: null,
   //     });
   //   } catch (error) {
   //     dispatch({
   //       type: AUTH_ERROR,
-  //       payload: error.response.data.message,
+  //       payload: error.response.data.error,
   //     });
   //   }
   // }
@@ -141,13 +129,18 @@ function AuthState(props: any): any {
       await login({email, password});
     } else {
       dispatch({
-        type: LOGIN_FAIL,
-        payload: 'User is not authenticated',
+        type: RESTORE_SESSION_ERROR,
+        payload: null,
       });
     }
   }
 
-  function clearErrors() {}
+  function clearErrors() {
+    dispatch({
+      type: CLEAR_ERRORS,
+      payload: null,
+    });
+  }
 
   function setLoading(loading: boolean) {
     dispatch({
@@ -177,7 +170,6 @@ function AuthState(props: any): any {
         clearErrors,
         setLoading,
         logout,
-        refreshToken,
       }}>
       {props.children}
     </AuthContext.Provider>
