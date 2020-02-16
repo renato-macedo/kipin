@@ -25,7 +25,6 @@ function ListItem() {
   }, [refreshing]);
 
   useEffect(() => {
-    console.log('ok ok');
     getItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

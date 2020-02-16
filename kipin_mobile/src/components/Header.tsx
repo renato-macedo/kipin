@@ -6,7 +6,7 @@ import AuthContext from '../context/auth/AuthContext';
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const {logout} = useContext(AuthContext);
-  const _handleSearch = () => console.log('Searching');
+
   function handlePress() {
     setMenuOpen(false);
     logout();
@@ -15,7 +15,7 @@ export default function Header() {
     <View>
       <Appbar.Header dark={true} style={styles.header}>
         <Appbar.Content title="My List" />
-        <Appbar.Action icon="magnify" onPress={_handleSearch} />
+        <Appbar.Action icon="magnify" />
         <Menu
           visible={menuOpen}
           onDismiss={() => setMenuOpen(false)}

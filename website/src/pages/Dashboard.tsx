@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState, Fragment, useContext } from 'react';
+import React, { Fragment, useContext } from 'react';
 //import api from '../services/api';
 import ItemList from '../components/ItemList';
 import AuthContext from '../context/auth/AuthContext';
@@ -14,8 +14,7 @@ export default function Home(): JSX.Element {
   // if (isLoading) {
   //   return <Spinner />;
   // }
-  const { isAuthenticated, loadUser, user } = useContext(AuthContext);
-  const [css] = useStyletron();
+  const { isAuthenticated } = useContext(AuthContext);
 
   // useEffect(() => {
   //   loadUser();

@@ -12,6 +12,13 @@ import { User } from '../user/user.interface';
 import { TokenPayload } from './types';
 import { EmailService } from '../email/email.service';
 import { HOST } from '../config/constants';
+import {
+  differenceInSeconds,
+  getTime,
+  addDays,
+  addMinutes,
+  differenceInMilliseconds,
+} from 'date-fns';
 @Injectable()
 export class AuthService {
   constructor(
@@ -41,6 +48,15 @@ export class AuthService {
     });
   }
 
+  async renewToken(userID: string) {
+    const user = await this.userService.loadUser(userID);
+    const token = await this.generateToken(
+      { email: user.email, sub: user.id },
+      '1min',
+    );
+    return token;
+  }
+
   async loadUser(userId) {
     const user = await this.userService.loadUser(userId);
     return user;
@@ -62,7 +78,6 @@ export class AuthService {
         status: HttpStatus.BAD_REQUEST,
       };
     } catch (error) {
-      console.log('error sending mail', error.message);
       return {
         success: false,
         message: 'email was not sent',
@@ -71,10 +86,18 @@ export class AuthService {
     }
   }
 
-  validateToken(token): [boolean, any] {
+  calculateExpiryTime(minutes: number) {
+    const now = new Date();
+    const inGivenMinutes = addMinutes(now, 2);
+
+    const MaxAge = differenceInMilliseconds(inGivenMinutes, now);
+    return MaxAge;
+  }
+
+  async validateToken(token): Promise<[boolean, any]> {
     try {
-      const decoded = this.jwtService.verify(token);
-      //console.log({ decoded });
+      const decoded = await this.jwtService.verifyAsync(token);
+
       return [true, decoded];
     } catch (error) {
       return [false, null];

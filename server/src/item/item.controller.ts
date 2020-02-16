@@ -9,10 +9,12 @@ import {
   Body,
   Delete,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ItemService } from './item.service';
 import { UpdateItemDto, ItemParams, CreateItemDto } from './item.dto';
+import { JWTAuthGuard } from '../auth/jwt.guard';
 
 @Controller('items')
 export class ItemController {
@@ -27,7 +29,10 @@ export class ItemController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   createItem(@Request() req, @Body() data: CreateItemDto) {
-    console.log({ use: req.user });
+    //console.log(req.user);
+    if (!req.user) {
+      throw new UnauthorizedException();
+    }
     return this.itemService.createItem({ ...data, ...req.user });
   }
 

@@ -15,7 +15,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/user.dto';
 
-import { differenceInSeconds, getTime, addDays, addMinutes } from 'date-fns';
 import { Response, Request } from 'express';
 import { UserService } from '../user/user.service';
 import { ResetDto } from './types';
@@ -30,36 +29,33 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Req() req, @Res() res: Response) {
-    //console.log(req.user);
     const { email, id } = req.user;
     const [token, refresh_token] = await Promise.all([
       this.authService.generateToken({ email, sub: id }, '1min'),
-      this.authService.generateToken({ sub: id }, '1h'),
+      this.authService.generateToken({ email, sub: id }, '2min'),
     ]);
-    const now = new Date();
-    const inFifteenMinutes = addMinutes(now, 2);
-    const inSevenDays = addDays(now, 7);
 
-    const expiresIn = getTime(inFifteenMinutes); //differenceInSeconds(inFifteenMinutes, now)
-    const MaxAge = differenceInSeconds(inSevenDays, now);
-
+    const MaxAge = this.authService.calculateExpiryTime(10);
     return res
       .cookie('refresh_token', refresh_token, {
         httpOnly: true,
-        maxAge: 120000,
+        maxAge: MaxAge,
       })
-      .json({ token, expiresIn });
+      .cookie('userID', id, {
+        httpOnly: true,
+        maxAge: MaxAge,
+      })
+      .json({ token });
 
     // return res.json({ token, expiresIn });
   }
 
   @Post('register')
   async register(@Body() data: CreateUserDto, @Res() res) {
-    //console.log({ data });
     //return this.authService.register(data);
     const { name, password, email } = data;
     const user = await this.userService.create({ name, password, email });
-    //console.log('iuiuiuiu');
+
     const [token, refresh_token] = await Promise.all([
       this.authService.generateToken(
         {
@@ -70,19 +66,14 @@ export class AuthController {
       ),
       this.authService.generateToken({ sub: user.id }, '1h'),
     ]);
-
-    const now = new Date();
-    const inFifteenMinutes = addMinutes(now, 2);
-    const inSevenDays = addDays(now, 7);
-
-    const expiresIn = getTime(inFifteenMinutes);
+    const MaxAge = this.authService.calculateExpiryTime(10);
 
     return res
       .cookie('refresh_token', refresh_token, {
         httpOnly: true,
-        maxAge: 120000,
+        maxAge: MaxAge,
       })
-      .json({ token, expiresIn });
+      .json({ token });
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -92,12 +83,11 @@ export class AuthController {
   }
 
   @Get('refresh_token')
-  refresh(@Req() req: Request) {
+  async refresh(@Req() req: Request) {
     if (req.cookies.refresh_token) {
-      //console.log('cookie', req.cookies);
-      //console.log(JSON.stringify(req.cookies, null, 2));
-
-      return { token: req.cookies.refresh_token };
+      const token = await this.authService.renewToken(req.cookies.userID);
+      //this.authService.generateToken()
+      return { token };
     }
 
     throw new BadRequestException('No cookie');
@@ -114,10 +104,10 @@ export class AuthController {
   }
 
   @Post('token')
-  validateToken(@Body() body) {
+  async validateToken(@Body() body) {
     const { token } = body;
     if (token) {
-      const [valid, decoded] = this.authService.validateToken(body.token);
+      const [valid, decoded] = await this.authService.validateToken(body.token);
       if (valid) {
         return { email: decoded.email };
       }

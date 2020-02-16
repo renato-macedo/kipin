@@ -7,7 +7,7 @@ export class ScrapeService {
   async getImagePreview(URL: string) {
     const response = await axios.get(URL);
     const $ = cheerio.load(response.data);
-    //console.log(response.data);
+
     const previewURL = this.searchAttribute($, 'image');
     const previewDescription = this.searchAttribute($, 'description');
     const previewTitle = this.searchAttribute($, 'title');

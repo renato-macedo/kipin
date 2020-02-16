@@ -73,8 +73,8 @@ export interface ItemInterface {
   id: string;
   body: string;
   title: string;
-  image: string;
-  description: string;
+  image?: string;
+  description?: string;
 }
 
 export interface ItemStateInterface {

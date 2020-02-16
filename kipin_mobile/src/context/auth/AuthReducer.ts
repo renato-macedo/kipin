@@ -22,8 +22,6 @@ const AuthReducer: any = (
   switch (action.type) {
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
-      //localStorage.setItem('token', action.payload.token);
-      // console.log('LOGIN SUCCESS');
       return {
         ...state,
         isAuthenticated: true,
@@ -32,7 +30,6 @@ const AuthReducer: any = (
       };
 
     case USER_LOADED:
-      // console.log('USER LOADED');
       return {
         ...state,
         isAuthenticated: true,

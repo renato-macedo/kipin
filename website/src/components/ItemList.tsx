@@ -3,31 +3,8 @@ import Item from './Item';
 
 import { StyledLoadingSpinner } from 'baseui/button';
 
-import { FlexGrid, FlexGridItem } from 'baseui/flex-grid';
+import { FlexGrid } from 'baseui/flex-grid';
 import ItemsContext from '../context/items/ItemsContext';
-
-// const items = [
-//   {
-//     id: 1,
-//     body: `http://docs.nestjs.com design system etc
-//     http://docs.nestjs.com design system etc
-//     http://docs.nestjs.com design system etc
-//     http://docs.nestjs.com design system etc
-//     http://docs.nestjs.com design system etc
-//     http://docs.nestjs.com design system etc`,
-//     title: 'NestJS Docs'
-//   },
-//   {
-//     id: 2,
-//     body: `saddkasjdkjsajkdja SAkdjsakjd kjaskdjksaj dksajkdujsakj dksajkodjsakldmsakojdskja kdj iasjdkjskajdkajdksjksajkdksajdksadasd
-//   asdsadajkshdjhsajdhsajhdjsha`,
-//     title: 'Base Web'
-//   },
-//   { id: 3, body: 'https://twitter.com/home', title: 'Twitter Feed' },
-//   { id: 4, body: 'http://docs.nestjs.com', title: 'NestJS Docs' },
-//   { id: 5, body: 'https://baseweb.design', title: 'Base Web' },
-//   { id: 6, body: 'https://twitter.com/home', title: 'Twitter Feed' }
-// ];
 
 function ItemList() {
   const { items, getItems, loading } = useContext(ItemsContext);
@@ -49,7 +26,7 @@ function ItemList() {
         justifyContent="center"
       >
         {items ? (
-          items.map((item: any) => (
+          items.map(item => (
             // <FlexGridItem key={item.id}>
             <Item
               key={item.id}

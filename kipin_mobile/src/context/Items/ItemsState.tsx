@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useReducer, useContext} from 'react';
 
 import ItemContext from './ItemsContext';
 const ItemProvider = ItemContext.Provider;
@@ -17,6 +17,7 @@ import {
 } from '../types';
 
 import axios from 'axios';
+import AuthContext from '../auth/AuthContext';
 
 function ItemState(props: any): any {
   const initialState: ItemStateInterface = {
@@ -27,10 +28,9 @@ function ItemState(props: any): any {
   const [state, dispatch] = useReducer(ItemReducer, initialState);
 
   async function getItems() {
-    console.log('aaaaa');
     try {
       const response = await axios.get('http://192.168.25.230:3000/items');
-      // console.log('RESPOSTA', response.data);
+
       dispatch({
         type: GET_ITEMS,
         payload: {items: response.data, loading: false},

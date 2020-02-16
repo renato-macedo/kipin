@@ -10,7 +10,6 @@ export class UserService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
   sanitizeUser(user: User) {
-    //console.log('depopulate', user.depopulate('password'));
     return user.depopulate('password');
   }
 
@@ -21,7 +20,6 @@ export class UserService {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
 
-    //console.log(data);
     const hash = await bcrypt.hash(password, 10);
     const newUser = new this.userModel({
       name,
@@ -65,7 +63,6 @@ export class UserService {
         return false;
       }
 
-      //console.log(data);
       const hash = await bcrypt.hash(newPassword, 10);
 
       await user.updateOne({ password: hash }).exec();

@@ -7,7 +7,6 @@ export class EmailService {
   private transporter: Transporter;
 
   constructor() {
-    console.log(emailConstants.user, emailConstants.port);
     this.transporter = createTransport({
       host: emailConstants.host,
       port: emailConstants.port,

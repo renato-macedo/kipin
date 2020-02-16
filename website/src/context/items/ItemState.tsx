@@ -18,6 +18,7 @@ import {
 } from '../types';
 
 import axios from 'axios';
+import setAuthToken from '../../utils/setAuthToken';
 
 function ItemState(props: any): any {
   const initialState: ItemStateInterface = {
@@ -36,10 +37,15 @@ function ItemState(props: any): any {
         payload: { items: response.data, loading: false }
       });
     } catch (error) {
-      dispatch({
-        type: ITEM_ERROR,
-        payload: error.response.data.error
-      });
+      const sucess = await renewToken();
+      if (sucess) {
+        getItems();
+      } else {
+        dispatch({
+          type: ITEM_ERROR,
+          payload: error.response.data.error
+        });
+      }
     }
   }
 
@@ -51,7 +57,17 @@ function ItemState(props: any): any {
         type: ADD_ITEM,
         payload: { item: response.data, loading: false }
       });
-    } catch (error) {}
+    } catch (error) {
+      const sucess = await renewToken();
+      if (sucess) {
+        addItem(body);
+      } else {
+        dispatch({
+          type: ITEM_ERROR,
+          payload: error.response.data.message
+        });
+      }
+    }
   }
 
   async function deleteItem(itemId: string) {
@@ -62,10 +78,15 @@ function ItemState(props: any): any {
         payload: { item: { id: itemId, body: '', title: '' }, loading: false }
       });
     } catch (error) {
-      dispatch({
-        type: ITEM_ERROR,
-        payload: { error: error.response.data.error, loading: false }
-      });
+      const sucess = await renewToken();
+      if (sucess) {
+        deleteItem(itemId);
+      } else {
+        dispatch({
+          type: ITEM_ERROR,
+          payload: { error: error.response.data.error, loading: false }
+        });
+      }
     }
   }
 
@@ -77,10 +98,15 @@ function ItemState(props: any): any {
         payload: { item, loading: false }
       });
     } catch (error) {
-      dispatch({
-        type: UPDATE_ERROR,
-        payload: { error: error.response.data.error, loading: false }
-      });
+      const sucess = await renewToken();
+      if (sucess) {
+        updateItem(item);
+      } else {
+        dispatch({
+          type: UPDATE_ERROR,
+          payload: { error: error.response.data.error, loading: false }
+        });
+      }
     }
   }
 
@@ -89,6 +115,19 @@ function ItemState(props: any): any {
       type: SET_LOADING,
       payload: { loading }
     });
+  }
+
+  async function renewToken() {
+    try {
+      const { data } = await axios.get(
+        'http://localhost:3000/auth/refresh_token'
+      );
+      console.log({ data });
+      setAuthToken(data.token);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   return (

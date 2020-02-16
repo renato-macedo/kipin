@@ -15,10 +15,10 @@ function ItemReducer(
   state: ItemStateInterface,
   action: ItemAction,
 ): ItemStateInterface {
+  console.log(action.type, 'payload:', action.payload);
   const {items, item, error, loading} = action.payload;
   switch (action.type) {
     case GET_ITEMS:
-      // console.log('GET ITEMS', items);
       return {
         items: items ? items : [],
         loading: false,

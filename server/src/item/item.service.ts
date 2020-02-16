@@ -12,7 +12,6 @@ export class ItemService {
   ) {}
 
   async index(userid) {
-    console.log({ userid });
     const items = await this.itemModel
       .find({ user: userid })
       .sort('-createdAt')
@@ -21,7 +20,7 @@ export class ItemService {
     return items.map(item => ({
       id: item.id,
       body: item.body,
-      title: item.title,
+      title: item.previewTitle,
       image: item.previewURL,
       description: item.previewDescription,
     }));
@@ -29,8 +28,8 @@ export class ItemService {
 
   async createItem(data: any) {
     const { userId: user, body, title } = data;
-    console.log(user);
-    let item = await this.itemModel.findOne({ body });
+
+    let item = await this.itemModel.findOne({ body, user });
     if (!item) {
       const previewData = await this.scrapeService.getImagePreview(body);
 
@@ -56,9 +55,9 @@ export class ItemService {
 
     try {
       const tobeUpdated = await this.itemModel.findOne({ _id: id, user });
-      console.log(tobeUpdated);
+
       if (!tobeUpdated) {
-        console.log(tobeUpdated);
+        return null;
       }
       const updatedItem = await tobeUpdated
         .updateOne({
