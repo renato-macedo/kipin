@@ -12,9 +12,10 @@ import Login from './Login';
 import Signup from './Signup';
 import Home from './Home';
 // import Info from './Info';
-import ItemState from './context/Items/ItemsState';
-import AuthState from './context/auth/AuthState';
-import AuthContext from './context/auth/AuthContext';
+
+import AppState from './context/AppState';
+import AppContext from './context/AppContext';
+
 import {View} from 'react-native';
 
 // import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
@@ -39,34 +40,10 @@ const Main = () => (
     <Home />
   </View>
 );
-// const MainTabs = createMaterialBottomTabNavigator();
-// function Main() {
-//   return (
-//     <MainTabs.Navigator
-//       initialRouteName="Home"
-//       barStyle={{backgroundColor: '#000'}}>
-//       <MainTabs.Screen
-//         options={{
-//           tabBarIcon: () => <IconButton color="white" icon="home" size={15} />,
-//         }}
-//         name="Home"
-//         component={Home}
-//       />
-//       <MainTabs.Screen
-//         options={{
-//           tabBarIcon: () => (
-//             <IconButton color="white" icon="account" size={15} />
-//           ),
-//         }}
-//         name="Info"
-//         component={Info}
-//       />
-//     </MainTabs.Navigator>
-//   );
-// }
+
 const AppStack = createStackNavigator();
 function App() {
-  const {isAuthenticated, loadUser} = useContext(AuthContext);
+  const {isAuthenticated, loadUser} = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   async function load() {
     setLoading(true);
@@ -107,13 +84,11 @@ const theme = {
 export default function AppWithProvider() {
   return (
     <PaperProvider theme={theme}>
-      <AuthState>
-        <ItemState>
-          <NavigationContainer>
-            <App />
-          </NavigationContainer>
-        </ItemState>
-      </AuthState>
+      <AppState>
+        <NavigationContainer>
+          <App />
+        </NavigationContainer>
+      </AppState>
     </PaperProvider>
   );
 }

@@ -7,13 +7,13 @@ import {
   ScrollView,
 } from 'react-native';
 import Item from './Item';
-import ItemsContext from '../context/Items/ItemsContext';
+import AppContext from '../context/AppContext';
 
 import {ItemInterface} from '../context/types';
 function ListItem() {
   const [refreshing, setRefreshing] = useState(false);
 
-  const {items, error, getItems, loading} = useContext(ItemsContext);
+  const {items, error, getItems, item_loading} = useContext(AppContext);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -32,10 +32,10 @@ function ListItem() {
   if (error) {
     return <Text>{error}</Text>;
   }
-  if (loading) {
+  if (item_loading) {
     return <Text>Loading...</Text>;
   }
-  if (!loading && items && items.length > 0) {
+  if (!item_loading && items && items.length > 0) {
     return (
       <FlatList
         style={styles.list}

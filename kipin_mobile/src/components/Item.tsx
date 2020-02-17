@@ -2,7 +2,7 @@ import React, {useState, useContext} from 'react';
 import {List, TouchableRipple, Avatar, Menu, Divider} from 'react-native-paper';
 import {ItemInterface} from 'src/context/types';
 import {View, Linking} from 'react-native';
-import ItemsContext from '../context/Items/ItemsContext';
+import AppContext from '../context/AppContext';
 
 // import {Image} from 'react-native';
 export default function Item({
@@ -11,7 +11,7 @@ export default function Item({
   item: ItemInterface;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const {deleteItem} = useContext(ItemsContext);
+  const {deleteItem} = useContext(AppContext);
   function handleDelete() {
     deleteItem(id);
   }

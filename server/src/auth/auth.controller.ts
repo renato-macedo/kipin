@@ -17,7 +17,7 @@ import { CreateUserDto } from '../user/user.dto';
 
 import { Response, Request } from 'express';
 import { UserService } from '../user/user.service';
-import { ResetDto } from './types';
+import { ResetDto, RefreshTokenDTO } from './types';
 
 @Controller('auth')
 export class AuthController {
@@ -48,6 +48,19 @@ export class AuthController {
       .json({ token });
 
     // return res.json({ token, expiresIn });
+  }
+  @UseGuards(AuthGuard('local'))
+  @Post('login/mobile')
+  async loginMobile(@Req() req, @Res() res: Response) {
+    const { email, id } = req.user;
+    const [token, refresh_token] = await Promise.all([
+      this.authService.generateToken({ email, sub: id }, '1min'),
+      this.authService.generateToken({ email, sub: id }, '10min'),
+    ]);
+
+    //const MaxAge = this.authService.calculateExpiryTime(10);
+
+    return res.json({ token, refresh_token });
   }
 
   @Post('register')
@@ -91,6 +104,25 @@ export class AuthController {
     }
 
     throw new BadRequestException('No cookie');
+  }
+
+  @Post('refresh_token/mobile')
+  async refreshMobile(@Body() body) {
+    //console.log('refresh token mobile', { body });
+    if (body.refresh_token) {
+      const [valid, decoded] = await this.authService.validateToken(
+        body.refresh_token,
+      );
+      console.log(decoded);
+      if (valid) {
+        const newToken = await this.authService.renewToken(decoded.sub);
+        console.log('response', newToken);
+        return { token: newToken };
+      }
+      throw new BadRequestException('invalid token');
+    }
+
+    throw new BadRequestException('missing refresh token');
   }
 
   @Get('logout')
@@ -147,6 +179,7 @@ export class AuthController {
 
     throw new BadRequestException('password could not be updated');
   }
+
   @Post('sendmail')
   async sendEmail(@Body() data: ResetDto) {
     const { email } = data;

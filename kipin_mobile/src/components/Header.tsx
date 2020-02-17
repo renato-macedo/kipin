@@ -1,11 +1,11 @@
 import React, {useState, useContext} from 'react';
 import {Appbar, Menu} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
-import AuthContext from '../context/auth/AuthContext';
+import AppContext from '../context/AppContext';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const {logout} = useContext(AuthContext);
+  const {logout} = useContext(AppContext);
 
   function handlePress() {
     setMenuOpen(false);

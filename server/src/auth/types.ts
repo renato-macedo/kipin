@@ -1,4 +1,4 @@
-import { IsEmail } from 'class-validator';
+import { IsEmail, IsJWT } from 'class-validator';
 
 export class ResetDto {
   @IsEmail()
@@ -8,4 +8,12 @@ export class ResetDto {
 export interface TokenPayload {
   email?: string;
   sub?: string;
+}
+
+export class RefreshTokenDTO {
+  @IsJWT()
+  readonly token: string;
+
+  @IsEmail()
+  readonly email: string;
 }

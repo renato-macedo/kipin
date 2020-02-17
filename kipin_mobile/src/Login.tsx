@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {View, StyleSheet, KeyboardAvoidingView} from 'react-native';
 import {TextInput, Button, Title} from 'react-native-paper';
-import AuthContext from './context/auth/AuthContext';
+import AppContext from './context/AppContext';
 
 import * as Yup from 'yup';
 import ErrorDialog from './components/ErrorDialog';
@@ -18,11 +18,11 @@ const validationSchema = Yup.object({
 
 function Login(props: any) {
   const {login, error, clearErrors, loading, setLoading} = useContext(
-    AuthContext,
+    AppContext,
   );
   const [validateError, setValidateError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [visible, setVisible] = useState(error);
+  const [visible, setVisible] = useState(!!error);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
