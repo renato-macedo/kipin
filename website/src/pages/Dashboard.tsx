@@ -2,7 +2,7 @@
 import React, { Fragment, useContext } from 'react';
 //import api from '../services/api';
 import ItemList from '../components/ItemList';
-import AuthContext from '../context/auth/AuthContext';
+import AppContext from '../context/AppContext';
 import { useStyletron } from 'styletron-react';
 import { Block } from 'baseui/block';
 import { Nav } from '../components';
@@ -14,7 +14,7 @@ export default function Home(): JSX.Element {
   // if (isLoading) {
   //   return <Spinner />;
   // }
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AppContext);
 
   // useEffect(() => {
   //   loadUser();

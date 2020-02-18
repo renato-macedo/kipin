@@ -2,8 +2,8 @@ import React, { Fragment, useContext, useEffect } from 'react';
 import { Client as Styletron } from 'styletron-engine-atomic';
 import { Provider as StyletronProvider } from 'styletron-react';
 import { BaseProvider, createTheme } from 'baseui';
-import AuthState from './context/auth/AuthState';
-import ItemState from './context/items/ItemState';
+
+import AppState from './context/AppState';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 import {
@@ -18,7 +18,7 @@ import {
 import Nav from './components/Nav';
 import PrivateRoute from './components/PrivateRoute';
 import theme from './theme';
-import AuthContext from './context/auth/AuthContext';
+import AppContext from './context/AppContext';
 
 const CustomTheme = createTheme(theme);
 CustomTheme;
@@ -26,7 +26,7 @@ const engine = new Styletron();
 
 function App() {
   const { refreshToken, isAuthenticated, loading, loadUser } = useContext(
-    AuthContext
+    AppContext
   );
   useEffect(() => {
     if (!isAuthenticated) {
@@ -58,11 +58,9 @@ export default function AppWithProvider() {
   return (
     <StyletronProvider value={engine}>
       <BaseProvider theme={CustomTheme}>
-        <AuthState>
-          <ItemState>
-            <App />
-          </ItemState>
-        </AuthState>
+        <AppState>
+          <App />
+        </AppState>
       </BaseProvider>
     </StyletronProvider>
   );

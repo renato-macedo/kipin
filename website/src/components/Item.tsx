@@ -15,15 +15,17 @@ import { ItemInterface } from '../context/types';
 import { useStyletron } from 'baseui';
 import { Overflow } from 'baseui/icon';
 
-import ItemsContext from '../context/items/ItemsContext';
+import AppContext from '../context/AppContext';
 import { Block } from 'baseui/block';
 
 // https://source.unsplash.com/user/erondu/300x300
 
 export default function Item(props: any) {
-  const { title, body, id, openMenu } = props;
+  const {
+    item: { title, body, id, image }
+  } = props;
   const [open, setOpen] = useState(false);
-  const { deleteItem } = useContext(ItemsContext);
+  const { deleteItem } = useContext(AppContext);
   const [css] = useStyletron();
   function handleDelete(label: string) {
     if (label === 'Delete') {
@@ -33,8 +35,18 @@ export default function Item(props: any) {
   return (
     <Fragment>
       <Card overrides={{ Root: { style: { width: '100%' } } }} title={title}>
-        <StyledBody>
+        {image && <StyledThumbnail src={image} />}
+        {/* <StyledBody>
           <EditInPlace id={id} title={title} body={body} />
+        </StyledBody> */}
+        <StyledBody>
+          <div
+            className={css({
+              wordBreak: 'break-word'
+            })}
+          >
+            {body}
+          </div>
         </StyledBody>
 
         <StyledAction>

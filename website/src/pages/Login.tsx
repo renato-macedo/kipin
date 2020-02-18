@@ -5,7 +5,7 @@ import { StyledLink } from 'baseui/link';
 import { FormControl } from 'baseui/form-control';
 import { Input } from 'baseui/input';
 import { useStyletron, styled } from 'baseui';
-import AuthContext from '../context/auth/AuthContext';
+import AppContext from '../context/AppContext';
 import { Block } from 'baseui/block';
 
 const FormContainer = styled('form', {
@@ -18,7 +18,7 @@ const FormContainer = styled('form', {
 });
 
 export default function Login(props: any) {
-  const { login, isAuthenticated, error } = useContext(AuthContext);
+  const { login, isAuthenticated, error } = useContext(AppContext);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

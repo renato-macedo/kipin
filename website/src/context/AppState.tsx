@@ -1,41 +1,48 @@
-/* eslint-disable no-unused-vars */
 import React, { useReducer, Reducer } from 'react';
-import AuthContext from './AuthContext';
-import AuthReducer from './AuthReducer';
-import setAuthToken from '../../utils/setAuthToken';
+import AppContext from './AppContext';
+import AppReducer from './AppReducer';
+
 import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
-  USER_LOADED,
-  AUTH_ERROR,
   Action,
-  AuthStateInterface,
+  AppStateInterface,
   FormDataInterface,
-  User,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   SET_LOADING,
   LOGOUT,
+  RESTORE_SESSION_ERROR,
+  DELETE_ITEM,
+  ADD_ITEM,
+  GET_ITEMS,
+  CLEAR_ERRORS,
+  UPDATE_ERROR,
+  UPDATE_ITEM,
+  ItemInterface,
+  AUTH_ERROR,
+  USER_LOADED,
   CONFIRM_COOKIE
-} from '../types';
+} from './types';
 
 import axios from 'axios';
+import setAuthToken from '../utils/setAuthToken';
 
-// let TokenInMemory: string;
-// let expiresIn: number;
 let accessToken: string;
 
-function AuthState(props: any): any {
-  const initialState: AuthStateInterface = {
-    token: accessToken,
+function AppState(props: any): any {
+  const initialState: AppStateInterface = {
+    token: '',
     isAuthenticated: false,
     loading: true,
     user: null,
-    error: null
+    error: null,
+    items: null,
+    item_loading: true
   };
 
-  const [state, dispatch] = useReducer<Reducer<AuthStateInterface, Action>>(
-    AuthReducer,
+  const [state, dispatch] = useReducer<Reducer<AppStateInterface, Action>>(
+    AppReducer,
     initialState
   );
 
@@ -144,18 +151,121 @@ function AuthState(props: any): any {
     }
   }
 
-  function clearErrors() {}
+  function clearErrors() {
+    dispatch({
+      type: CLEAR_ERRORS,
+      payload: null
+    });
+  }
+
+  async function getItems() {
+    try {
+      const response = await axios.get('http://localhost:3000/items');
+      // console.log('RESPOSTA', response.data);
+      dispatch({
+        type: GET_ITEMS,
+        payload: { items: response.data, item_loading: false }
+      });
+    } catch (error) {
+      const sucess = await renewToken();
+      if (sucess) {
+        getItems();
+      } else {
+        dispatch({
+          type: AUTH_ERROR,
+          payload: error.response.data.error
+        });
+      }
+    }
+  }
+
+  async function addItem(body: string) {
+    const data = { body, title: 'title' };
+    try {
+      const response = await axios.post('http://localhost:3000/items', data);
+      dispatch({
+        type: ADD_ITEM,
+        payload: { item: response.data, item_loading: false }
+      });
+    } catch (error) {
+      const sucess = await renewToken();
+      if (sucess) {
+        addItem(body);
+      } else {
+        dispatch({
+          type: AUTH_ERROR,
+          payload: error.response.data.message
+        });
+      }
+    }
+  }
+
+  async function deleteItem(itemId: string) {
+    try {
+      await axios.delete(`http://localhost:3000/items/${itemId}`);
+      dispatch({
+        type: DELETE_ITEM,
+        payload: {
+          item: { id: itemId, body: '', title: '' },
+          item_loading: false
+        }
+      });
+    } catch (error) {
+      const sucess = await renewToken();
+      if (sucess) {
+        deleteItem(itemId);
+      } else {
+        dispatch({
+          type: AUTH_ERROR,
+          payload: { error: error.response.data.error, item_loading: false }
+        });
+      }
+    }
+  }
+
+  async function updateItem(item: ItemInterface) {
+    try {
+      await axios.patch(`http://localhost:3000/items/${item.id}`, item);
+      dispatch({
+        type: UPDATE_ITEM,
+        payload: { item, item_loading: false }
+      });
+    } catch (error) {
+      const sucess = await renewToken();
+      if (sucess) {
+        updateItem(item);
+      } else {
+        dispatch({
+          type: UPDATE_ERROR,
+          payload: { error: error.response.data.error, item_loading: false }
+        });
+      }
+    }
+  }
 
   function setLoading(loading: boolean) {
     dispatch({
       type: SET_LOADING,
-      payload: loading
+      payload: { item_loading: loading }
     });
+  }
+
+  async function renewToken() {
+    try {
+      const { data } = await axios.get(
+        'http://localhost:3000/auth/refresh_token'
+      );
+      console.log({ data });
+      setAuthToken(data.token);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   async function logout() {
     try {
-      const response = await axios.get('http://localhost:3000/auth/logout');
+      await axios.get('http://localhost:3000/auth/logout');
       dispatch({
         type: LOGOUT,
         payload: null
@@ -167,8 +277,9 @@ function AuthState(props: any): any {
       });
     }
   }
+
   return (
-    <AuthContext.Provider
+    <AppContext.Provider
       value={{
         //token: state.token,
         login,
@@ -181,11 +292,17 @@ function AuthState(props: any): any {
         clearErrors,
         setLoading,
         logout,
-        refreshToken
+        addItem,
+        deleteItem,
+        getItems,
+        items: state.items,
+        updateItem,
+        refreshToken,
+        item_loading: state.item_loading
       }}
     >
       {props.children}
-    </AuthContext.Provider>
+    </AppContext.Provider>
   );
 }
 
@@ -195,4 +312,4 @@ function tellExtensionItsAuthenticated(data: any) {
   console.log('dispatch login event');
 }
 
-export default AuthState;
+export default AppState;

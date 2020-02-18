@@ -18,6 +18,8 @@ export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const SET_LOADING = 'SET_LOADING';
+export const RESTORE_SESSION_ERROR = 'RESTORE_SESSION_ERROR';
+export const ITEM_LOADING = 'ITEM_LOADING';
 
 export interface ItemProps {
   key: any;
@@ -41,14 +43,34 @@ export interface FormDataInterface {
   password: string;
 }
 
+export interface AppContextInterface {
+  isAuthenticated: boolean;
+  loading: boolean;
+  item_loading: boolean;
+  user: User | null;
+  error: string | null;
+  login: (formData: FormDataInterface) => Promise<void>;
+  register: (formData: FormDataInterface) => Promise<void>;
+  logout: () => void;
+  clearErrors: () => void;
+  refreshToken: () => Promise<void>;
+  loadUser: () => void;
+  setLoading: (loading: boolean) => void;
+  items: Array<ItemInterface> | null;
+
+  getItems: () => Promise<void>;
+  addItem: (body: string) => void;
+  deleteItem: (itemId: string) => void;
+  updateItem: (item: ItemInterface) => void;
+}
 export interface AuthContextInterface {
-  // token: string | null;
+  token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   user: User | null;
   error: string | null;
-  login: (formData: FormDataInterface) => void;
-  register: (formData: FormDataInterface) => void;
+  login: (formData: FormDataInterface) => Promise<boolean>;
+  register: (formData: FormDataInterface) => Promise<boolean>;
   logout: () => void;
   clearErrors: () => void;
   loadUser: () => void;
@@ -62,6 +84,16 @@ export interface AuthStateInterface {
   loading: boolean;
   user: User | null;
   error: string | null;
+}
+
+export interface AppStateInterface {
+  token?: string;
+  isAuthenticated: boolean;
+  loading: boolean;
+  item_loading: boolean;
+  user: User | null;
+  error: string | null;
+  items: Array<ItemInterface> | null;
 }
 
 // export interface AuthPayload {
@@ -86,7 +118,7 @@ export interface ItemsContextInterface {
   items: Array<ItemInterface> | null;
   error?: string;
   loading: boolean;
-  getItems: () => void;
+  getItems: () => Promise<void>;
   addItem: (body: string) => void;
   deleteItem: (itemId: string) => void;
   updateItem: (item: ItemInterface) => void;
@@ -103,7 +135,14 @@ export interface ItemAction {
   };
 }
 
+export interface ItemPayload {
+  items?: Array<ItemInterface>;
+  item?: ItemInterface;
+  error?: string;
+  item_loading: boolean;
+}
+
 export interface Action {
   type: string;
-  payload: User | string | boolean | null;
+  payload: User | ItemPayload | string | boolean | null;
 }

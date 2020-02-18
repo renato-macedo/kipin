@@ -11,14 +11,14 @@ import { Label1 } from 'baseui/typography';
 import { Button } from 'baseui/button';
 import { Plus, Menu as Burger } from 'baseui/icon';
 import { Link } from 'react-router-dom';
-import AuthContext from '../context/auth/AuthContext';
+import AppContext from '../context/AppContext';
 import { useStyletron } from 'baseui';
 import { Display4, H4 } from 'baseui/typography';
 import Menu from './Sidebar';
 import { Block } from 'baseui/block';
 
 export default function Nav() {
-  const { isAuthenticated, user } = useContext(AuthContext);
+  const { isAuthenticated, user } = useContext(AppContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <Block width={['100%', '100%', '50%']} margin="0 auto">

@@ -10,13 +10,13 @@ import {
 import { FormControl } from 'baseui/form-control';
 import { Textarea } from 'baseui/textarea';
 import { Input } from 'baseui/input';
-import ItemsContext from '../context/items/ItemsContext';
+import AppContext from '../context/AppContext';
 
 export default function AddItemForm(props: any) {
   const { isOpen, close } = props;
   //const [title, setTitle] = useState('')
   const [loading, setLoading] = useState(false);
-  const { addItem } = useContext(ItemsContext);
+  const { addItem } = useContext(AppContext);
 
   const [body, setBody] = useState('');
   const [error, setError] = useState(false);

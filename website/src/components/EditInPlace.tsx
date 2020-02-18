@@ -7,17 +7,19 @@ import React, {
   Fragment,
   Ref
 } from 'react';
+
 import { ItemInterface } from '../context/types';
-import ItemsContext from '../context/items/ItemsContext';
+import AppContext from '../context/AppContext';
 import { Textarea } from 'baseui/textarea';
 import { Paragraph1 } from 'baseui/typography';
 import { useStyletron } from 'baseui';
+
 export default function EditInPlace(props: PropsWithChildren<ItemInterface>) {
   const { body, id, title } = props;
   const [css] = useStyletron();
   const [editing, setEditing] = useState(false);
   const [content, setContent] = useState(body);
-  const { updateItem } = useContext(ItemsContext);
+  const { updateItem } = useContext(AppContext);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   function ChangeMode() {
     setEditing(true);

@@ -14,12 +14,12 @@ import { useStyletron } from 'baseui';
 import { Drawer, ANCHOR, SIZE } from 'baseui/drawer';
 import { StatefulMenu } from 'baseui/menu';
 import { ChevronRight } from 'baseui/icon';
-import AuthContext from '../context/auth/AuthContext';
+import AppContext from '../context/AppContext';
 
 export default function Menu(props: any) {
   const { isOpen, setIsOpen } = props;
   //const [isOpen, setIsOpen] = useState(false);
-  const { logout } = useContext(AuthContext);
+  const { logout } = useContext(AppContext);
 
   function handleSelect({ item }: any) {
     if (item.option === 'Log Out') {

@@ -4,10 +4,10 @@ import Item from './Item';
 import { StyledLoadingSpinner } from 'baseui/button';
 
 import { FlexGrid } from 'baseui/flex-grid';
-import ItemsContext from '../context/items/ItemsContext';
+import AppContext from '../context/AppContext';
 
 function ItemList() {
-  const { items, getItems, loading } = useContext(ItemsContext);
+  const { items, getItems, loading } = useContext(AppContext);
 
   useEffect(() => {
     getItems();
@@ -28,12 +28,7 @@ function ItemList() {
         {items ? (
           items.map(item => (
             // <FlexGridItem key={item.id}>
-            <Item
-              key={item.id}
-              id={item.id}
-              title={item.title}
-              body={item.body}
-            />
+            <Item key={item.id} item={item} />
             // </FlexGridItem>
           ))
         ) : (

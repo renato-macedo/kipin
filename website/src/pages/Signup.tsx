@@ -6,7 +6,7 @@ import { FormControl } from 'baseui/form-control';
 import { Input } from 'baseui/input';
 import { useStyletron, styled } from 'baseui';
 import { Block } from 'baseui/block';
-import AuthContext from '../context/auth/AuthContext';
+import AppContext from '../context/AppContext';
 // import { Toast, KIND, ToasterContainer, PLACEMENT } from 'baseui/toast';
 import { Notification, KIND } from 'baseui/notification';
 import { DeleteAlt } from 'baseui/icon';
@@ -26,7 +26,7 @@ export default function Signup(props: any) {
   const [isLoading, setIsLoading] = useState(false);
 
   const { register, error, isAuthenticated, loading, setLoading } = useContext(
-    AuthContext
+    AppContext
   );
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
