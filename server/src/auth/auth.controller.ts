@@ -32,7 +32,7 @@ export class AuthController {
     const { email, id } = req.user;
     const [token, refresh_token] = await Promise.all([
       this.authService.generateToken({ email, sub: id }, '1min'),
-      this.authService.generateToken({ email, sub: id }, '2min'),
+      this.authService.generateToken({ email, sub: id }, '10min'),
     ]);
 
     const MaxAge = this.authService.calculateExpiryTime(10);
@@ -45,7 +45,7 @@ export class AuthController {
         httpOnly: true,
         maxAge: MaxAge,
       })
-      .json({ token });
+      .json({ token, email, refresh_token });
 
     // return res.json({ token, expiresIn });
   }
@@ -106,7 +106,7 @@ export class AuthController {
     throw new BadRequestException('No cookie');
   }
 
-  @Post('refresh_token/mobile')
+  @Post('refresh_token/mobile') // TODO: change this path
   async refreshMobile(@Body() body) {
     //console.log('refresh token mobile', { body });
     if (body.refresh_token) {
@@ -130,6 +130,7 @@ export class AuthController {
     if (req.cookies.refresh_token) {
       return res
         .clearCookie('refresh_token')
+        .clearCookie('userID')
         .json({ message: 'Log Out successfully' });
     }
     throw new BadRequestException('No cookie');
