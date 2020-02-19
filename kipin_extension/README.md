@@ -1,5 +1,5 @@
 ## TO DO
 
-- [ ] Better syncing
-- [ ] Keep session alive
-- [ ] Unsave page
+- [x] Better syncing
+- [x] Keep session alive
+- [ ] Unsave page ?

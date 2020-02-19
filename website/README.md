@@ -11,4 +11,4 @@
 - [x] Add Item
 - [ ] Mobile First Design (😩)
 - [ ] Logo
-- [ ] Thumbnail for links in the body
+- [x] Thumbnail for links in the body
