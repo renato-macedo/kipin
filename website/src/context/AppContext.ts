@@ -20,7 +20,8 @@ const AppContext = createContext<AppContextInterface>({
   deleteItem: () => {},
   refreshToken: async () => {},
   updateItem: () => {},
-  setLoading: (_loading: boolean) => {}
+  setLoading: (_loading: boolean) => {},
+  setItemLoading: (_loading: boolean) => {}
 });
 
 export default AppContext;

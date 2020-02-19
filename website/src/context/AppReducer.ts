@@ -15,12 +15,13 @@ import {
   AppStateInterface,
   UPDATE_ITEM,
   ITEM_ERROR,
+  ITEM_LOADING
 } from './types';
 
 const AppReducer: any = (
   // Reducer<iAuthState, Action>
   state: AppStateInterface,
-  action: any,
+  action: any
 ) => {
   console.log(action.type, 'payload:', action.payload);
 
@@ -33,8 +34,8 @@ const AppReducer: any = (
       return {
         ...state,
         isAuthenticated: true,
-        loading: false,
         token: payload,
+        loading: false
       };
 
     case USER_LOADED:
@@ -42,7 +43,7 @@ const AppReducer: any = (
         ...state,
         isAuthenticated: true,
         user: payload,
-        loading: false,
+        loading: false
       };
     case REGISTER_FAIL:
     case LOGIN_FAIL:
@@ -53,7 +54,7 @@ const AppReducer: any = (
         isAuthenticated: false,
         loading: false,
         user: null,
-        error: payload,
+        error: payload
       };
 
     case RESTORE_SESSION_ERROR:
@@ -62,38 +63,43 @@ const AppReducer: any = (
         token: null,
         isAuthenticated: false,
         loading: false,
-        error: null,
+        error: null
       };
     case SET_LOADING:
       return {
         ...state,
-        loading: payload,
+        loading: payload
+      };
+    case ITEM_LOADING:
+      return {
+        ...state,
+        item_loading: payload
       };
     case LOGOUT: {
       return {
         ...state,
         user: null,
         isAuthenticated: false,
-        loading: false,
+        loading: false
       };
     }
     case CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
+        error: null
       };
     case GET_ITEMS:
       return {
         ...state,
         items: payload.items ? payload.items : [],
-        item_loading: false,
+        item_loading: false
       };
     case ADD_ITEM:
       if (state.items) {
         return {
           ...state,
           items: [payload.item, ...state.items],
-          loading: payload.loading,
+          loading: payload.loading
         };
       } else {
         return state;
@@ -101,16 +107,16 @@ const AppReducer: any = (
     case ITEM_ERROR:
       return {
         ...state,
-        error: payload.error,
+        error: payload.error
       };
     case UPDATE_ITEM:
       if (state.items && payload.item) {
         return {
           ...state,
           items: state.items.map(elem =>
-            elem.id === payload.item.id ? payload.item : elem,
+            elem.id === payload.item.id ? payload.item : elem
           ),
-          loading: false,
+          loading: false
         };
       } else {
         return state;
@@ -121,7 +127,7 @@ const AppReducer: any = (
         return {
           ...state,
           items: state.items.filter(elem => elem.id !== payload.item.id),
-          loading: false,
+          loading: false
         };
       } else {
         return state;

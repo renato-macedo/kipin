@@ -1,23 +1,13 @@
-import axios, { AxiosInstance } from 'axios';
+import axios from 'axios';
 
-const instanceItems = axios.create({
+export const API = axios.create({
   baseURL: 'http://localhost:3000'
 });
 
-const instanceAuth = axios.create({
-  baseURL: '/auth'
-});
-
-function ItemsService(token: string): AxiosInstance {
-  instanceItems.defaults.headers.common['Authorization'] = token;
-  return instanceItems;
+export function setAuthToken(token: string) {
+  if (token) {
+    API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete API.defaults.headers.common['Authorization'];
+  }
 }
-
-function AuthService(): AxiosInstance {
-  return instanceAuth;
-}
-
-export default {
-  AuthService,
-  ItemsService
-};

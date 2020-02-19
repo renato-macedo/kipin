@@ -6,7 +6,9 @@ import AppContext from './context/AppContext';
 import ErrorDialog from './components/ErrorDialog';
 
 const validationSchema = Yup.object({
-  name: Yup.string().max(50, 'Name must be 50 characters or less'),
+  name: Yup.string()
+    .max(50, 'Name must be 50 characters or less')
+    .required('Name is required'),
   email: Yup.string()
     .email('Invalid email address')
     .required('Email is required'),

@@ -7,14 +7,15 @@ import { FlexGrid } from 'baseui/flex-grid';
 import AppContext from '../context/AppContext';
 
 function ItemList() {
-  const { items, getItems, loading } = useContext(AppContext);
+  const { items, getItems, loading, item_loading } = useContext(AppContext);
 
   useEffect(() => {
     getItems();
   }, []);
 
-  if (loading) {
-    return <p>Loading</p>;
+  if (item_loading) {
+    //return <p>Loading</p>;
+    return <StyledLoadingSpinner />;
   }
 
   return (

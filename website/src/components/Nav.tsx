@@ -37,13 +37,6 @@ export default function Nav() {
               <Burger size={32} />
             </Button>
           </StyledNavigationItem>
-          {/* <StyledNavigationItem>
-          <Link to="/" style={{ textDecoration: 'none' }}>
-            <StyledNavigationItem>
-              <H4 color="white">Kipin</H4>
-            </StyledNavigationItem>
-          </Link>
-        </StyledNavigationItem> */}
         </StyledNavigationList>
         <StyledNavigationList $align={ALIGN.center} />
         {isAuthenticated ? (

@@ -7,10 +7,16 @@ import {
   ModalFooter,
   ModalButton
 } from 'baseui/modal';
+
 import { FormControl } from 'baseui/form-control';
 import { Textarea } from 'baseui/textarea';
 import { Input } from 'baseui/input';
+import { string } from 'yup';
 import AppContext from '../context/AppContext';
+
+const schema = string()
+  .url('This must be a valid URL')
+  .required();
 
 export default function AddItemForm(props: any) {
   const { isOpen, close } = props;
@@ -19,7 +25,7 @@ export default function AddItemForm(props: any) {
   const { addItem } = useContext(AppContext);
 
   const [body, setBody] = useState('');
-  const [error, setError] = useState(false);
+  const [error, setError] = useState('');
   function clearStateAndClose() {
     close();
     setBody('');
@@ -27,19 +33,21 @@ export default function AddItemForm(props: any) {
 
   function handleChange(ev: any) {
     if (event && event.currentTarget) {
-      setError(false);
+      setError('');
       setBody(ev.currentTarget.value);
     }
   }
-  function submit() {
+  async function submit() {
     setLoading(true);
-    if (body) {
+
+    try {
+      await schema.validate(body);
       addItem(body);
-    } else {
-      setError(true);
+      clearStateAndClose();
+    } catch (error) {
+      setError(error.errors[0]);
     }
     setLoading(false);
-    clearStateAndClose();
   }
 
   return (
@@ -53,22 +61,20 @@ export default function AddItemForm(props: any) {
             onChange={event => setTitle(event.currentTarget.value)}
           />
         </FormControl> */}
-        <FormControl
-          label="Add a note or URL"
-          error={error ? 'This cannot be empty' : null}
-        >
-          <Textarea
+        <FormControl label="Add a URL" error={error ? error : null}>
+          {/* <Textarea
             id="textarea-id"
             value={body}
             onChange={handleChange}
-            error={error}
-          />
+            error={!!error}
+          /> */}
+          <Input value={body} onChange={handleChange} error={!!error} />
         </FormControl>
       </ModalBody>
       <ModalFooter>
         <ModalButton onClick={clearStateAndClose}>Cancel</ModalButton>
         <ModalButton isLoading={loading} onClick={submit}>
-          Okay
+          Ok
         </ModalButton>
       </ModalFooter>
     </Modal>

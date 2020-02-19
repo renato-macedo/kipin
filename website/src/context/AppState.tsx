@@ -22,12 +22,14 @@ import {
   ItemInterface,
   AUTH_ERROR,
   USER_LOADED,
-  CONFIRM_COOKIE
+  CONFIRM_COOKIE,
+  ITEM_ERROR,
+  ITEM_LOADING
 } from './types';
 
-import axios from 'axios';
-import setAuthToken from '../utils/setAuthToken';
-
+// import API from 'API';
+// import setAuthToken from '../utils/setAuthToken';
+import { API, setAuthToken } from '../services/api';
 let accessToken: string;
 
 function AppState(props: any): any {
@@ -49,10 +51,7 @@ function AppState(props: any): any {
   // Login User
   async function login(formData: FormDataInterface) {
     try {
-      const response = await axios.post(
-        'http://localhost:3000/auth/login',
-        formData
-      );
+      const response = await API.post('/auth/login', formData);
       // console.log(response.headers);
 
       accessToken = response.data.token;
@@ -73,11 +72,8 @@ function AppState(props: any): any {
   // Register User
   async function register(formData: FormDataInterface) {
     try {
-      const response = await axios.post(
-        'http://localhost:3000/auth/register',
-        formData
-      );
-      // // console.log(response.headers);
+      const response = await API.post('/auth/register', formData);
+      console.log('success', response.data);
 
       accessToken = response.data.token;
       setAuthToken(accessToken);
@@ -88,6 +84,7 @@ function AppState(props: any): any {
 
       loadUser();
     } catch (error) {
+      console.log('fail', error.response);
       let { message } = error.response.data;
       // console.log({ message });
       if (message !== 'User already exists') {
@@ -102,9 +99,7 @@ function AppState(props: any): any {
 
   async function refreshToken(): Promise<void> {
     try {
-      const response = await axios.get(
-        'http://localhost:3000/auth/refresh_token'
-      );
+      const response = await API.get('/auth/refresh_token');
       // console.log(response.data);
       setAuthToken(response.data.token);
       accessToken = response.data.token;
@@ -138,7 +133,7 @@ function AppState(props: any): any {
       }
     });
     try {
-      const response = await axios.get('http://localhost:3000/auth/user');
+      const response = await API.get('/auth/user');
       dispatch({
         type: USER_LOADED,
         payload: response.data
@@ -160,7 +155,7 @@ function AppState(props: any): any {
 
   async function getItems() {
     try {
-      const response = await axios.get('http://localhost:3000/items');
+      const response = await API.get('/items');
       // console.log('RESPOSTA', response.data);
       dispatch({
         type: GET_ITEMS,
@@ -182,19 +177,28 @@ function AppState(props: any): any {
   async function addItem(body: string) {
     const data = { body, title: 'title' };
     try {
-      const response = await axios.post('http://localhost:3000/items', data);
+      const response = await API.post('/items', data);
+
       dispatch({
         type: ADD_ITEM,
         payload: { item: response.data, item_loading: false }
       });
     } catch (error) {
-      const sucess = await renewToken();
-      if (sucess) {
-        addItem(body);
+      if (error.response.status === 401) {
+        const sucess = await renewToken();
+        if (sucess) {
+          addItem(body);
+        } else {
+          dispatch({
+            type: AUTH_ERROR,
+            payload: error.response.data.message
+          });
+        }
       } else {
+        console.log(error.response);
         dispatch({
-          type: AUTH_ERROR,
-          payload: error.response.data.message
+          type: ITEM_ERROR,
+          payload: { error: error.response.data.error, item_loading: false }
         });
       }
     }
@@ -202,7 +206,7 @@ function AppState(props: any): any {
 
   async function deleteItem(itemId: string) {
     try {
-      await axios.delete(`http://localhost:3000/items/${itemId}`);
+      await API.delete(`/items/${itemId}`);
       dispatch({
         type: DELETE_ITEM,
         payload: {
@@ -225,7 +229,7 @@ function AppState(props: any): any {
 
   async function updateItem(item: ItemInterface) {
     try {
-      await axios.patch(`http://localhost:3000/items/${item.id}`, item);
+      await API.patch(`/items/${item.id}`, item);
       dispatch({
         type: UPDATE_ITEM,
         payload: { item, item_loading: false }
@@ -246,15 +250,19 @@ function AppState(props: any): any {
   function setLoading(loading: boolean) {
     dispatch({
       type: SET_LOADING,
-      payload: { item_loading: loading }
+      payload: loading
+    });
+  }
+  function setItemLoading(loading: boolean) {
+    dispatch({
+      type: ITEM_LOADING,
+      payload: loading
     });
   }
 
   async function renewToken() {
     try {
-      const { data } = await axios.get(
-        'http://localhost:3000/auth/refresh_token'
-      );
+      const { data } = await API.get('/auth/refresh_token');
       console.log({ data });
       setAuthToken(data.token);
       return true;
@@ -265,7 +273,7 @@ function AppState(props: any): any {
 
   async function logout() {
     try {
-      await axios.get('http://localhost:3000/auth/logout');
+      await API.get('/auth/logout');
       dispatch({
         type: LOGOUT,
         payload: null
@@ -298,6 +306,7 @@ function AppState(props: any): any {
         items: state.items,
         updateItem,
         refreshToken,
+        setItemLoading,
         item_loading: state.item_loading
       }}
     >

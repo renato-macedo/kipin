@@ -56,34 +56,13 @@ export interface AppContextInterface {
   refreshToken: () => Promise<void>;
   loadUser: () => void;
   setLoading: (loading: boolean) => void;
+  setItemLoading: (loading: boolean) => void;
   items: Array<ItemInterface> | null;
 
   getItems: () => Promise<void>;
   addItem: (body: string) => void;
   deleteItem: (itemId: string) => void;
   updateItem: (item: ItemInterface) => void;
-}
-export interface AuthContextInterface {
-  token: string | null;
-  isAuthenticated: boolean;
-  loading: boolean;
-  user: User | null;
-  error: string | null;
-  login: (formData: FormDataInterface) => Promise<boolean>;
-  register: (formData: FormDataInterface) => Promise<boolean>;
-  logout: () => void;
-  clearErrors: () => void;
-  loadUser: () => void;
-  setLoading: (loading: boolean) => void;
-  refreshToken: () => void;
-}
-
-export interface AuthStateInterface {
-  token?: string;
-  isAuthenticated: boolean;
-  loading: boolean;
-  user: User | null;
-  error: string | null;
 }
 
 export interface AppStateInterface {
@@ -114,16 +93,6 @@ export interface ItemStateInterface {
   loading: boolean;
 }
 
-export interface ItemsContextInterface {
-  items: Array<ItemInterface> | null;
-  error?: string;
-  loading: boolean;
-  getItems: () => Promise<void>;
-  addItem: (body: string) => void;
-  deleteItem: (itemId: string) => void;
-  updateItem: (item: ItemInterface) => void;
-  setLoading: (loading: boolean) => void;
-}
 export interface ItemAction {
   type: string;
   //payload: Array<ItemInterface> | [ItemInterface] | string;
