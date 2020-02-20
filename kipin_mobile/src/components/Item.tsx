@@ -28,9 +28,13 @@ export default function Item({
             icon={() => (
               <Avatar.Image
                 size={48}
-                source={{
-                  uri: image,
-                }}
+                source={
+                  image
+                    ? {
+                        uri: image,
+                      }
+                    : require('./icon.png')
+                }
               />
             )}
           />
