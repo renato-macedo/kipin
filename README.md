@@ -1,15 +1,26 @@
 ## Description
 
-This is a application to store pages and notes (like GoogleKeep, Pocket)
+This is a Chrome Extension, SPA and Mobile App to store pages and notes (like GoogleKeep, Pocket)
 
-## Installation
+Stack: <a href="https://nestjs.com/" target>Nestjs</a>, <a href="https://github.com/facebook/react" target="_blank">React</a>, <a href="https://github.com/facebook/react-native" target="_blank">React Native</a> and Vanilla Javascript
+
+## Installation 
+(this is not a monorepo, you must install all package dependencies separately)
 
 ```bash
 $ cd server
 $ npm install
 ```
 
-## Running the app
+## Building the webapp
+
+```bash
+$ cd website
+$ npm install
+$ npm run build
+```
+
+## Running the server
 
 ```bash
 # development
