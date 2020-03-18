@@ -35,7 +35,9 @@ export default function Item(props: any) {
   return (
     <Fragment>
       <Card overrides={{ Root: { style: { width: '100%' } } }} title={title}>
-        {image && <StyledThumbnail src={image} />}
+        <StyledThumbnail
+          src={image ? image : 'http://localhost:3000/img/placeholder.png'}
+        />
         {/* <StyledBody>
           <EditInPlace id={id} title={title} body={body} />
         </StyledBody> */}
