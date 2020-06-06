@@ -3,7 +3,7 @@ import {
   HeaderNavigation,
   ALIGN,
   StyledNavigationList,
-  StyledNavigationItem
+  StyledNavigationItem,
 } from 'baseui/header-navigation';
 
 import AddItemForm from './AddItemForm';
@@ -13,7 +13,6 @@ import { Plus, Menu as Burger } from 'baseui/icon';
 import { Link } from 'react-router-dom';
 import AppContext from '../context/AppContext';
 import { useStyletron } from 'baseui';
-import { Display4, H4 } from 'baseui/typography';
 import Menu from './Sidebar';
 import { Block } from 'baseui/block';
 
@@ -26,9 +25,9 @@ export default function Nav() {
         overrides={{
           Root: {
             style: {
-              backgroundColor: 'black'
-            }
-          }
+              backgroundColor: 'black',
+            },
+          },
         }}
       >
         <StyledNavigationList $align={ALIGN.left}>

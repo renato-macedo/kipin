@@ -1,19 +1,8 @@
-import React, {
-  useContext,
-  Fragment,
-  PropsWithChildren,
-  useState
-} from 'react';
-import {
-  ListItemLabel,
-  MenuAdapter,
-  ARTWORK_SIZES,
-  ListItem
-} from 'baseui/list';
-import { useStyletron } from 'baseui';
+import React, { useContext } from 'react';
+import { ListItemLabel, MenuAdapter } from 'baseui/list';
+
 import { Drawer, ANCHOR, SIZE } from 'baseui/drawer';
 import { StatefulMenu } from 'baseui/menu';
-import { ChevronRight } from 'baseui/icon';
 import AppContext from '../context/AppContext';
 
 export default function Menu(props: any) {
@@ -39,7 +28,7 @@ export default function Menu(props: any) {
           { option: 'My List' },
           { option: 'Favorites' },
           { option: 'Settings' },
-          { option: 'Log Out' }
+          { option: 'Log Out' },
         ]}
         onItemSelect={handleSelect}
         overrides={{
@@ -52,9 +41,9 @@ export default function Menu(props: any) {
               border: 'none',
               boxShadow: 'none',
               ':focus': {
-                border: 'none'
-              }
-            }
+                border: 'none',
+              },
+            },
           },
 
           Option: {
@@ -71,11 +60,11 @@ export default function Menu(props: any) {
                     >
                       <ListItemLabel>{props.item.option}</ListItemLabel>
                     </MenuAdapter>
-                  ))
-                }
-              }
-            }
-          }
+                  )),
+                },
+              },
+            },
+          },
         }}
       />
 

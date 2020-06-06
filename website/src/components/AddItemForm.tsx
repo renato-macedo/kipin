@@ -5,22 +5,18 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  ModalButton
+  ModalButton,
 } from 'baseui/modal';
 
 import { FormControl } from 'baseui/form-control';
-import { Textarea } from 'baseui/textarea';
 import { Input } from 'baseui/input';
 import { string } from 'yup';
 import AppContext from '../context/AppContext';
 
-const schema = string()
-  .url('This must be a valid URL')
-  .required();
+const schema = string().url('This must be a valid URL').required();
 
 export default function AddItemForm(props: any) {
   const { isOpen, close } = props;
-  //const [title, setTitle] = useState('')
   const [loading, setLoading] = useState(false);
   const { addItem } = useContext(AppContext);
 

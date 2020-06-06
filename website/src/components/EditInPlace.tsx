@@ -1,11 +1,9 @@
 import React, {
   useState,
-  useEffect,
   useContext,
   PropsWithChildren,
   useRef,
   Fragment,
-  Ref
 } from 'react';
 
 import { ItemInterface } from '../context/types';
@@ -46,20 +44,20 @@ export default function EditInPlace(props: PropsWithChildren<ItemInterface>) {
           Input: {
             style: {
               height: '30vh',
-              width: '100vw' // fill all available space up to parent max-width
-            }
+              width: '100vw', // fill all available space up to parent max-width
+            },
           },
           InputContainer: {
             style: {
               maxWidth: '100%',
-              width: 'min-content'
-            }
-          }
+              width: 'min-content',
+            },
+          },
         }}
         autoFocus={true}
         inputRef={inputRef}
         onBlur={finishEditing}
-        onChange={e => setContent(e.currentTarget.value)}
+        onChange={(e) => setContent(e.currentTarget.value)}
         value={content}
       />
     );
@@ -73,8 +71,8 @@ export default function EditInPlace(props: PropsWithChildren<ItemInterface>) {
         className={css({
           padding: '0.1%',
           ':hover': {
-            backgroundColor: '#E2E2E2'
-          }
+            backgroundColor: '#E2E2E2',
+          },
         })}
       >
         <Paragraph1>

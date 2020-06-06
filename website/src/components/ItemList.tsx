@@ -7,7 +7,7 @@ import { FlexGrid } from 'baseui/flex-grid';
 import AppContext from '../context/AppContext';
 
 function ItemList() {
-  const { items, getItems, loading, item_loading } = useContext(AppContext);
+  const { items, getItems, item_loading } = useContext(AppContext);
 
   useEffect(() => {
     getItems();

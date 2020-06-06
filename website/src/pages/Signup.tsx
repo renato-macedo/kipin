@@ -4,7 +4,7 @@ import { Card, StyledBody, StyledAction } from 'baseui/card';
 
 import { FormControl } from 'baseui/form-control';
 import { Input } from 'baseui/input';
-import { useStyletron, styled } from 'baseui';
+import { styled } from 'baseui';
 import { Block } from 'baseui/block';
 import AppContext from '../context/AppContext';
 // import { Toast, KIND, ToasterContainer, PLACEMENT } from 'baseui/toast';
@@ -44,7 +44,7 @@ export default function Signup(props: any) {
     errors: string[];
   } | null>(null);
 
-  const { register, error, isAuthenticated, loading } = useContext(AppContext);
+  const { register, error, isAuthenticated } = useContext(AppContext);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();

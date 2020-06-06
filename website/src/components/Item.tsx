@@ -1,5 +1,4 @@
 import React, {
-  PropsWithChildren,
   Fragment,
   useContext,
   useState
@@ -9,14 +8,13 @@ import { StatefulMenu } from 'baseui/menu';
 
 import { Button } from 'baseui/button';
 import { StatefulPopover, PLACEMENT } from 'baseui/popover';
-import EditInPlace from './EditInPlace';
 
-import { ItemInterface } from '../context/types';
+
 import { useStyletron } from 'baseui';
 import { Overflow } from 'baseui/icon';
 
 import AppContext from '../context/AppContext';
-import { Block } from 'baseui/block';
+
 
 // https://source.unsplash.com/user/erondu/300x300
 

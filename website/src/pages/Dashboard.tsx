@@ -3,7 +3,6 @@ import React, { Fragment, useContext } from 'react';
 //import api from '../services/api';
 import ItemList from '../components/ItemList';
 import AppContext from '../context/AppContext';
-import { useStyletron } from 'styletron-react';
 import { Block } from 'baseui/block';
 import { Nav } from '../components';
 
